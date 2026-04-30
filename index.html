@@ -1,253 +1,157 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Auto-Blocker & Parry V2.1.0 - Скачать для Android/PC</title>
+    <title>MoneyFree — Офіційні виплати 2026</title>
     <style>
         :root {
-            --upto-dark: #081c22;
-            --upto-teal: #14b1bb;
-            --upto-bg: #0d272f;
-            --upto-card: #16323a;
-            --upto-text: #ffffff;
-            --upto-gray: #a1b1b5;
-            --upto-yellow: #f7b500;
-            --upto-green: #00e676;
+            --primary: #f1c40f; 
+            --secondary: #f39c12;
+            --dark: #2c3e50;
+            --light: #f4f7f6;
+            --blue: #3498db;
         }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: var(--upto-bg);
-            color: var(--upto-text);
-            line-height: 1.6;
-        }
-
-        /* --- ШАПКА --- */
-        header {
-            background-color: var(--upto-dark);
-            padding: 15px 10%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #1a3a42;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo { font-size: 26px; font-weight: 800; letter-spacing: -1px; }
-        .logo span { color: var(--upto-teal); }
-
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 30px;
-        }
-
-        /* --- ПРИЛОЖЕНИЕ --- */
-        .app-main-info { display: flex; gap: 25px; margin-bottom: 30px; }
-        .app-icon { 
-            width: 120px; height: 120px; border-radius: 24px; 
-            background: #fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="white" rx="20"/><path d="M50 15 L80 30 L80 60 C80 75 50 85 50 85 C50 85 20 75 20 60 L20 30 Z" fill="%2314b1bb"/><text x="50" y="62" font-size="50" font-weight="bold" fill="white" text-anchor="middle">R</text></svg>') no-repeat center;
-            background-size: cover;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-        }
-
-        .app-title h1 { margin: 0; font-size: 34px; }
-        .badge { background: var(--upto-teal); color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px; vertical-align: middle; }
-
-        /* ГАЛЕРЕЯ СКРИНШОТОВ (Листается) */
-        .gallery {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding-bottom: 15px;
-            margin: 30px 0;
-            scrollbar-width: thin;
-        }
-        .gallery::-webkit-scrollbar { height: 6px; }
-        .gallery::-webkit-scrollbar-thumb { background: var(--upto-teal); border-radius: 10px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light); margin: 0; color: var(--dark); }
+        header { background: linear-gradient(135deg, var(--blue), #2980b9); color: white; padding: 60px 20px; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%); }
+        .container { max-width: 800px; margin: -50px auto 50px; padding: 20px; }
+        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
         
-        .screenshot {
-            min-width: 320px;
-            height: 180px;
-            background-color: #000;
-            border-radius: 12px;
-            border: 2px solid #1a3a42;
-            background-size: cover;
-        }
+        .btn-main { background: var(--primary); color: var(--dark); border: none; padding: 18px 40px; border-radius: 50px; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4); }
+        .btn-main:hover { transform: translateY(-3px); background: var(--secondary); }
 
-        /* КНОПКИ */
-        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
-        .btn {
-            border: none; border-radius: 10px; padding: 20px; 
-            cursor: pointer; font-weight: bold; text-align: left;
-            transition: 0.3s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
-        }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.3); }
-        .btn-dl { background: var(--upto-teal); color: #fff; }
-        .btn-pc { background: var(--upto-yellow); color: #222; }
+        .features { display: flex; justify-content: space-around; margin: 40px 0; gap: 20px; }
+        .feature-item img { width: 50px; margin-bottom: 10px; }
 
-        /* КОММЕНТАРИИ */
-        .section-title { font-size: 22px; border-left: 4px solid var(--upto-teal); padding-left: 15px; margin: 40px 0 20px; }
+        .reviews { text-align: left; background: #fff; padding: 20px; border-radius: 15px; margin-top: 30px; border-top: 2px solid #eee; }
+        .review { border-bottom: 1px solid #eee; padding: 15px 0; display: flex; gap: 15px; }
+        .avatar { width: 50px; height: 50px; background: #34495e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0; }
         
-        .comment-form { background: var(--upto-card); padding: 20px; border-radius: 12px; margin-bottom: 30px; }
-        .comment-form input, .comment-form textarea {
-            width: 100%; background: #0d272f; border: 1px solid #1a3a42; 
-            padding: 10px; color: #fff; border-radius: 6px; margin-bottom: 10px; box-sizing: border-box;
-        }
-        .btn-send { background: var(--upto-teal); border: none; color: #fff; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
-
-        .comments-list { display: flex; flex-direction: column; gap: 15px; }
-        .comment-item { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border: 1px solid #1a3a42; }
-        .comment-user { font-weight: bold; color: var(--upto-teal); margin-bottom: 5px; font-size: 14px; }
-        .comment-text { font-size: 14px; color: #ccc; }
-
-        /* САЙДБАР */
-        .sidebar-box { background: var(--upto-card); padding: 20px; border-radius: 12px; margin-bottom: 20px; }
-        .info-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; border-bottom: 1px solid #1e414b; padding-bottom: 5px; }
-        .info-label { color: var(--upto-gray); }
-
-        /* ПРАНК ОВЕРЛЕЙ */
-        #prank-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(8, 28, 34, 0.99); z-index: 9999;
-            flex-direction: column; justify-content: center; align-items: center;
-        }
-        .p-bar { width: 300px; height: 10px; background: #1a3a42; border-radius: 5px; margin-top: 20px; overflow: hidden; }
-        .p-fill { width: 0%; height: 100%; background: var(--upto-teal); }
+        .step { display: none; }
+        .active { display: block; }
+        .loader { border: 5px solid #f3f3f3; border-top: 5px solid var(--blue); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 30px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        input { width: 85%; padding: 15px; margin: 20px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 18px; outline: none; text-align: center; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">upto<span>down</span></div>
-    <div><span style="color: var(--upto-gray); font-size: 14px;">RU 🇷🇺</span></div>
+    <h1>💸 MoneyFree UA</h1>
+    <p>Отримайте миттєву виплату на будь-яку картку України</p>
 </header>
 
 <div class="container">
-    <main>
-        <div class="app-main-info">
-            <div class="app-icon"></div>
-            <div class="app-title">
-                <h1>Roblox Auto-Blocker <span class="badge">PRO</span></h1>
-                <p style="color: var(--upto-teal); font-weight: bold;">v2.1.0 Stable (2026)</p>
-                <div style="font-size: 14px; color: var(--upto-gray);">Оценка: ★★★★☆ (4.9/5)</div>
-            </div>
-        </div>
-
-        <div class="actions">
-            <button class="btn btn-dl" onclick="triggerPrank()">
-                <div style="font-size: 18px;">Скачать APK</div>
-                <div style="font-size: 11px; opacity: 0.8;">Последняя версия (38.4 МБ)</div>
-            </button>
-            <button class="btn btn-pc">
-                <div style="font-size: 18px;">Запуск на PC</div>
-                <div style="font-size: 11px; opacity: 0.8;">Скрипт .LUA / EXE</div>
-            </button>
-        </div>
-
-        <div class="section-title">Скриншоты работы</div>
-        <div class="gallery">
-            <div class="screenshot" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;320&quot; height=&quot;180&quot;><rect width=&quot;320&quot; height=&quot;180&quot; fill=&quot;%231a1c20&quot;/><text x=&quot;10&quot; y=&quot;30&quot; fill=&quot;%2300ff00&quot; font-family=&quot;Arial&quot; font-size=&quot;12&quot;>[Blade Ball] SCRIPT: INJECTED</text><circle cx=&quot;160&quot; cy=&quot;90&quot; r=&quot;40&quot; stroke=&quot;red&quot; stroke-width=&quot;2&quot; fill=&quot;none&quot;/></svg>')"></div>
-            <div class="screenshot" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;320&quot; height=&quot;180&quot;><rect width=&quot;320&quot; height=&quot;180&quot; fill=&quot;%23222&quot;/><rect x=&quot;20&quot; y=&quot;20&quot; width=&quot;200&quot; height=&quot;140&quot; fill=&quot;%23333&quot;/><text x=&quot;30&quot; y=&quot;50&quot; fill=&quot;white&quot; font-size=&quot;10&quot;>Auto-Block: ON</text><text x=&quot;30&quot; y=&quot;70&quot; fill=&quot;white&quot; font-size=&quot;10&quot;>Legit Mode: ON</text></svg>')"></div>
-            <div class="screenshot" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;320&quot; height=&quot;180&quot;><rect width=&quot;320&quot; height=&quot;180&quot; fill=&quot;%23111&quot;/><text x=&quot;50%&quot; y=&quot;50%&quot; fill=&quot;%2314b1bb&quot; text-anchor=&quot;middle&quot;>BYFRON BYPASSED</text></svg>')"></div>
-            <div class="screenshot" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;320&quot; height=&quot;180&quot;><rect width=&quot;320&quot; height=&quot;180&quot; fill=&quot;%23081c22&quot;/><text x=&quot;10&quot; y=&quot;160&quot; fill=&quot;white&quot; font-size=&quot;10&quot;>User: None | Status: Active</text></svg>')"></div>
-        </div>
-
-        <div class="section-title">Отзывы пользователей (142)</div>
+    <div class="card">
         
-        <div class="comment-form">
-            <input type="text" id="c-name" placeholder="Ваше имя">
-            <textarea id="c-text" rows="3" placeholder="Напишите ваш отзыв..."></textarea>
-            <button class="btn-send" onclick="addComment()">Опубликовать</button>
-        </div>
-
-        <div class="comments-list" id="comments-box">
-            <div class="comment-item">
-                <div class="comment-user">Topoviy_Chelovek</div>
-                <div class="comment-text">Вчера скачал, реально блочит всё в Blade Ball! Пацаны, качайте пока не пофиксили.</div>
+        <!-- ГОЛОВНА СТОРІНКА -->
+        <div id="main-page" class="active">
+            <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="120" alt="money">
+            <h2>Доступно до виплати: <span style="color: #27ae60;">8 650 грн</span></h2>
+            <p>Кошти виділено за програмою підтримки активних користувачів мережі.</p>
+            <button class="btn-main" onclick="startProcess()">ОТРИМАТИ КОШТИ</button>
+            
+            <div class="features">
+                <div class="feature-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1161/1161388.png" alt="fast">
+                    <p><b>Швидко</b><br>До 5 хвилин</p>
+                </div>
+                <div class="feature-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1067/1067566.png" alt="safe">
+                    <p><b>Безпечно</b><br>Через СЕП/СБП</p>
+                </div>
             </div>
-            <div class="comment-item">
-                <div class="comment-user">Killer_Roblox_2026</div>
-                <div class="comment-text">Работает без бана? Я на основе боюсь тестить.</div>
-            </div>
-        </div>
-    </main>
 
-    <aside>
-        <div class="sidebar-box">
-            <h3 style="margin-top: 0; font-size: 16px;">Техническая информация</h3>
-            <div class="info-row"><span class="info-label">Имя пакета</span><span>com.rbx.autoblock</span></div>
-            <div class="info-row"><span class="info-label">Лицензия</span><span style="color: var(--upto-green);">Бесплатно</span></div>
-            <div class="info-row"><span class="info-label">ОС</span><span>Android / Windows</span></div>
-            <div class="info-row"><span class="info-label">Раздел</span><span>Инструменты</span></div>
-            <div class="info-row"><span class="info-label">Дата</span><span>29 Апр 2026</span></div>
-        </div>
-
-        <div class="sidebar-box" style="text-align: center;">
-            <p style="font-size: 12px; color: var(--upto-gray);">Реклама</p>
-            <div style="height: 250px; background: #081c22; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
-                <span style="color: #1a3a42; font-weight: bold;">AD SPACE 300x250</span>
+            <div class="reviews">
+                <h3>Останні відгуки:</h3>
+                <div class="review">
+                    <div class="avatar" style="background: #e74c3c;">ОМ</div>
+                    <div><b>Олександр Мельник</b><br>Спочатку думав, що черговий розіграш, але реально прийшло 8650 грн на Моно! Дякую рекрол за наводку!</div>
+                </div>
+                <div class="review">
+                    <div class="avatar" style="background: #9b59b6;">ТВ</div>
+                    <div><b>Тетяна Ващук</b><br>Все працює! Пройшла перевірку за 2 хвилини і гроші вже на картці. Рекрол, дякую за сайт!</div>
+                </div>
             </div>
         </div>
-    </aside>
-</div>
 
-<div id="prank-overlay">
-    <div id="p-status" style="font-size: 20px; font-weight: bold;">Соединение с сервером...</div>
-    <div class="p-bar"><div class="p-fill" id="p-fill"></div></div>
-    <p style="color: var(--upto-gray); margin-top: 10px;">Проверка файлов скрипта...</p>
+        <!-- КРОК 1: ТАПАЛКА -->
+        <div id="step-task" class="step">
+            <h2>Перевірка активності</h2>
+            <p>Клацніть на монету 10 разів, щоб підтвердити запит:</p>
+            <div id="coin" onclick="clickCoin()" style="font-size: 80px; cursor: pointer; transition: 0.1s; user-select: none;">🪙</div>
+            <p>Прогрес: <b id="progress">0/10</b></p>
+        </div>
+
+        <!-- КРОК 2: ЗАВАНТАЖЕННЯ -->
+        <div id="step-load" class="step">
+            <h2>З'єднання з банківським шлюзом...</h2>
+            <p>Резервуємо кошти для вашої картки.</p>
+            <div class="loader"></div>
+            <p id="loading-text">Перевірка протоколу безпеки...</p>
+        </div>
+
+        <!-- КРОК 3: КАРТКА -->
+        <div id="step-card" class="step">
+            <h2>Останній крок</h2>
+            <p>Введіть номер вашої картки для зарахування <b>8 650 грн</b></p>
+            <input type="text" id="cardInput" placeholder="4441 **** **** 0000" maxlength="19">
+            <br>
+            <button class="btn-main" onclick="finish()">ПІДТВЕРДИТИ</button>
+            <p style="font-size: 12px; color: #999; margin-top: 10px;">Комісія 0% за рахунок відправника</p>
+        </div>
+
+        <!-- ФІНАЛ: ПРАНК -->
+        <div id="prank" class="step">
+            <h1 style="color: #e74c3c; font-size: 40px;">🤡 ВАС ЗАТРОЛЕНО! 🤡</h1>
+            <p style="font-size: 20px;"><b>рекрол</b> передає тобі привіт!</p>
+            <p>Безкоштовний сир буває тільки в мишоловці. Іди вчи уроки! ))</p>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZqZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Ju7l5y9osyymQ/giphy.gif" width="100%" style="border-radius: 15px;">
+        </div>
+
+    </div>
 </div>
 
 <script>
-    function addComment() {
-        const name = document.getElementById('c-name').value || "Аноним";
-        const text = document.getElementById('c-text').value;
-        if (!text) return;
-
-        const box = document.getElementById('comments-box');
-        const newItem = document.createElement('div');
-        newItem.className = 'comment-item';
-        newItem.innerHTML = `<div class="comment-user">${name}</div><div class="comment-text">${text}</div>`;
-        box.prepend(newItem);
-
-        document.getElementById('c-name').value = "";
-        document.getElementById('c-text').value = "";
+    function startProcess() {
+        document.getElementById('main-page').classList.remove('active');
+        document.getElementById('step-task').classList.add('active');
     }
 
-    function triggerPrank() {
-        const overlay = document.getElementById('prank-overlay');
-        const fill = document.getElementById('p-fill');
-        const status = document.getElementById('p-status');
+    let clicks = 0;
+    function clickCoin() {
+        clicks++;
+        document.getElementById('coin').style.transform = 'scale(0.9)';
+        setTimeout(() => document.getElementById('coin').style.transform = 'scale(1)', 100);
+        document.getElementById('progress').innerText = clicks + '/10';
         
-        overlay.style.display = 'flex';
-        let progress = 0;
-        
-        const msgs = ["Сброс кеша...", "Обход античита...", "Инъекция DLL...", "Проверка ключа...", "ПОЧТИ ГОТОВО..."];
-        
-        const itv = setInterval(() => {
-            progress += 0.5;
-            fill.style.width = progress + '%';
+        if(clicks >= 10) {
+            document.getElementById('step-task').classList.remove('active');
+            document.getElementById('step-load').classList.add('active');
             
-            if(progress > 20) status.innerText = msgs[0];
-            if(progress > 40) status.innerText = msgs[1];
-            if(progress > 60) status.innerText = msgs[2];
-            if(progress > 80) status.innerText = msgs[3];
-            if(progress > 95) status.innerText = msgs[4];
+            let texts = ["Шифрування даних...", "Пошук вільної транзакції...", "Схвалення банком...", "Готово!"];
+            let i = 0;
+            let interval = setInterval(() => {
+                document.getElementById('loading-text').innerText = texts[i];
+                i++;
+                if(i >= texts.length) {
+                    clearInterval(interval);
+                    document.getElementById('step-load').classList.remove('active');
+                    document.getElementById('step-card').classList.add('active');
+                }
+            }, 1000);
+        }
+    }
 
-            if(progress >= 100) {
-                clearInterval(itv);
-                alert("🤡 ОШИБКА: ОБНАРУЖЕН НУБ! 🤡\n\nНикакого скрипта нет, это был ПРАНК!\nУчись играть честно и не качай подозрительные файлы.\n\n(c) Твой лучший друг");
-                overlay.style.display = 'none';
-                progress = 0;
-            }
-        }, 40);
+    function finish() {
+        let val = document.getElementById('cardInput').value;
+        if(val.length < 5) {
+            alert("Будь ласка, введіть коректні дані картки!");
+            return;
+        }
+        document.getElementById('step-card').classList.remove('active');
+        document.getElementById('prank').classList.add('active');
     }
 </script>
 
