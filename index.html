@@ -3,145 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RezonaChit — Найкращий приватний чит для SAMP</title>
+    <title>Arizona-shop — Офіційний дилер</title>
     <style>
-        :root { --main: #ff4757; --bg: #0f1216; --card: #1e2229; --text: #ffffff; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; }
-        
-        .navbar { background: rgba(0,0,0,0.8); padding: 15px 10%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
-        .logo-area { display: flex; align-items: center; gap: 10px; }
-        .logo-img { width: 40px; height: 40px; background: var(--main); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; box-shadow: 0 0 15px var(--main); }
-        
-        .hero { padding: 60px 10%; display: flex; gap: 40px; align-items: center; background: radial-gradient(circle at top right, #2d1b1b, transparent); }
-        .hero-info { flex: 1; }
-        .hero-info h1 { font-size: 48px; margin: 0; }
-        .hero-info p { color: #a1a1a1; font-size: 18px; margin: 20px 0; }
-        
-        .btn-download { background: var(--main); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-download:hover { transform: scale(1.05); background: #ff6b81; }
+        :root { --arizona: #ff8c00; --bg: #ffffff; --text: #333; --light: #f8f9fa; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        .section-title { padding: 40px 10% 20px; font-size: 28px; border-bottom: 2px solid var(--main); width: fit-content; margin-left: 10%; }
+        /* Sidebar */
+        .sidebar { width: 260px; background: var(--light); border-right: 1px solid #ddd; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .sidebar h2 { color: var(--arizona); margin-bottom: 20px; text-align: center; }
+        .side-link { padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; color: #444; }
+        .side-link:hover { background: #eee; }
+        .side-link.active { background: var(--arizona); color: white; }
+
+        /* Content */
+        .main { flex: 1; overflow-y: auto; padding: 30px; position: relative; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .card { border: 1px solid #eee; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .card img { width: 100%; height: 130px; object-fit: contain; }
+        .price { color: var(--arizona); font-weight: bold; font-size: 20px; margin: 10px 0; }
         
-        /* Скріншоти */
-        .screenshots { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px 10%; }
-        .screenshot-item { width: 100%; border-radius: 10px; border: 1px solid #444; transition: 0.3s; }
-        .screenshot-item:hover { border-color: var(--main); transform: scale(1.02); }
+        /* Forms */
+        .form-group { margin-bottom: 15px; text-align: left; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn-main { background: var(--arizona); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
-        /* Коментарі */
-        .comments-box { padding: 40px 10%; background: #161a20; }
-        .comment-input { width: 100%; background: var(--card); border: 1px solid #444; padding: 15px; color: white; border-radius: 8px; margin-bottom: 10px; }
-        .comment-list { margin-top: 30px; }
-        .comment-item { background: var(--card); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--main); }
-        .comment-item b { color: var(--main); display: block; margin-bottom: 5px; }
+        /* Views */
+        .view { display: none; }
+        .view.active { display: block; }
 
-        /* Вікно пранку (приховане) */
-        #prank-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; text-align: center; }
-        .loader { border: 4px solid #333; border-top: 4px solid var(--main); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Cart Item */
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: white; margin-bottom: 5px; border-radius: 8px; }
+        .btn-del { color: #ff4757; cursor: pointer; font-size: 14px; border: none; background: none; }
+
+        /* Overlay */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     </style>
 </head>
 <body>
 
-<div class="navbar">
-    <div class="logo-area">
-        <div class="logo-img">R</div>
-        <span style="font-size: 22px; font-weight: bold;">RezonaChit</span>
+    <div class="sidebar">
+        <h2>Arizona Shop</h2>
+        <div class="side-link active" data-target="shop" onclick="switchTab(this)">🏠 Головна</div>
+        <div class="side-link" data-target="shop" onclick="filterItems('🚗 Транспорт', this)">🚗 Транспорт</div>
+        <div class="side-link" data-target="shop" onclick="filterItems('💎 Аксесуари', this)">💎 Аксесуари</div>
+        <div class="side-link" data-target="shop" onclick="filterItems('👕 Скіни', this)">👕 Скіни</div>
+        <hr style="width:100%; border:0.5px solid #ddd;">
+        <div class="side-link" data-target="cart" onclick="switchTab(this)">🛒 Кошик (<span id="cart-count">0</span>)</div>
     </div>
-    <div style="color: #2ecc71; font-size: 14px;">● Статус: Працює (2026)</div>
-</div>
 
-<div class="hero">
-    <div class="hero-info">
-        <h1>RezonaChit v4.2 Private</h1>
-        <p>Найкращий мультихак для Arizona, Advance та Diamond RP. Повний обхід античіта, Silent Aim, Visuals та накрутка ігрової валюти в одному флаконі.</p>
-        <button class="btn-download" onclick="startPrank()">СКАЧАТИ БЕЗКОШТОВНО</button>
-        <p style="font-size: 12px; color: #666;">Розмір: 12.4 MB | Завантажень: 48,291</p>
-    </div>
-    <img src="https://i.imgur.com/8m5XNlM.png" alt="preview" style="width: 40%; border-radius: 15px; box-shadow: 0 0 30px rgba(255,71,87,0.3);">
-</div>
-
-<div class="section-title">Огляд софту</div>
-<div class="screenshots">
-    <img src="https://i.ytimg.com/vi/S7lS-G0UvM8/maxresdefault.jpg" class="screenshot-item">
-    <img src="https://i.ytimg.com/vi/uE37N1L-9pM/maxresdefault.jpg" class="screenshot-item">
-    <img src="https://i.imgur.com/GscTBeS.jpg" class="screenshot-item">
-</div>
-
-<div class="section-title">Відгуки користувачів</div>
-<div class="comments-box">
-    <input type="text" id="userName" class="comment-input" placeholder="Ваш ігровий нік...">
-    <textarea id="commentText" class="comment-input" rows="3" placeholder="Напишіть ваш відгук..."></textarea>
-    <button class="btn-download" style="font-size: 16px; padding: 10px 25px;" onclick="addComment()">Відправити</button>
-
-    <div class="comment-list" id="commentList">
-        <div class="comment-item"><b>Admin_SAMP:</b> Чит бомба, користуюся вже місяць, банів немає.</div>
-        <div class="comment-item"><b>Ghetto_King:</b> Аім дуже плавний, на каптах розношу всіх.</div>
-    </div>
-</div>
-
-<!-- Модальне вікно для процесу -->
-<div id="prank-overlay">
-    <div style="max-width: 500px; padding: 40px;">
-        <div id="proc-box">
-            <h2>Підготовка до завантаження...</h2>
-            <div class="loader"></div>
-            <p id="status-text">Підключення до серверів RezonaChit...</p>
+    <div class="main">
+        <!-- КАТАЛОГ -->
+        <div id="shop" class="view active">
+            <h1 id="cat-title">Всі товари</h1>
+            <div class="grid" id="product-grid"></div>
         </div>
-        
-        <div id="final-prank" style="display:none;">
-            <h1 style="color: var(--main); font-size: 50px;">🤡 ТРОЛІНГ! 🤡</h1>
-            <p style="font-size: 24px;"><b>рекрол</b> заскамила тебе!</p>
-            <p>Який RezonaChit? Який аім? Іди вчи уроки! ))</p>
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZqZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Ju7l5y9osyymQ/giphy.gif" width="100%" style="border-radius: 10px; margin-top: 20px;">
-            <br><br>
-            <button class="btn-download" onclick="location.reload()">ЗАКРИТИ ПРАНК</button>
+
+        <!-- КОШИК -->
+        <div id="cart" class="view">
+            <h1>Мій кошик</h1>
+            <div id="cart-list"></div>
+            <div id="cart-summary" style="display:none; margin-top: 20px;">
+                <h3>Разом: <span id="total-price">0</span> грн</h3>
+                
+                <div style="max-width: 400px; margin-top: 30px; background: var(--light); padding: 20px; border-radius: 12px;">
+                    <h4>Спосіб доставки</h4>
+                    <select id="delivery">
+                        <option>Нова Пошта</option>
+                        <option>Укрпошта</option>
+                        <option>Самовивіз (LS)</option>
+                    </select>
+                    
+                    <h4>Дані для оплати</h4>
+                    <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" style="margin-bottom: 10px;">
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" placeholder="ММ/РР" maxlength="5">
+                        <input type="password" placeholder="CVV" maxlength="3">
+                    </div>
+                    <button class="btn-main" style="margin-top: 20px;" onclick="processPayment()">ОПЛАТИТИ</button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    // Функція додавання коментаря
-    function addComment() {
-        const name = document.getElementById('userName').value || "Анонім";
-        const text = document.getElementById('commentText').value;
-        if(!text) return alert("Введіть текст!");
+    <!-- OVERLAY -->
+    <div id="overlay" class="overlay">
+        <div id="loader-box">
+            <h2 id="status">Підключення до банку...</h2>
+            <div style="border: 4px solid #f3f3f3; border-top: 4px solid var(--arizona); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto;"></div>
+        </div>
+        <div id="success-box" style="display:none; padding: 20px;">
+            <h1 style="color: #2ecc71;">✅ ОПЛАТА УСПІШНА!</h1>
+            <p style="font-size: 18px;">Дякуємо за покупку в Arizona Shop.</p>
+            <div style="background: var(--light); padding: 20px; border-radius: 12px; margin: 20px auto; max-width: 400px;">
+                <b>Замовлення:</b> #<span id="order-num"></span><br>
+                <b>Доставка:</b> <span id="delivery-info"></span><br>
+                <b>Час очікування:</b> <span id="wait-time"></span>
+            </div>
+            <hr>
+            <div id="prank" style="margin-top: 20px;">
+                <h2 style="color: var(--arizona);">Очікуй товар!</h2>
+                <p><b>рекрол</b> каже: "Гроші списано (так), товар прийде (так)!"</p>
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZqZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Ju7l5y9osyymQ/giphy.gif" width="100%" style="border-radius: 10px;">
+            </div>
+            <button class="btn-main" onclick="location.reload()" style="width: 200px; margin-top: 20px;">Повернутись</button>
+        </div>
+    </div>
 
-        const list = document.getElementById('commentList');
-        const newItem = document.createElement('div');
-        newItem.className = 'comment-item';
-        newItem.innerHTML = `<b>${name}:</b> ${text}`;
-        list.prepend(newItem);
+    <script>
+        let cart = [];
+        const categories = ["🚗 Транспорт", "💎 Аксесуари", "👕 Скіни"];
+        const items = [];
 
-        document.getElementById('userName').value = "";
-        document.getElementById('commentText').value = "";
-    }
-
-    // Функція запуску пранку
-    function startPrank() {
-        document.getElementById('prank-overlay').style.display = 'flex';
-        const st = document.getElementById('status-text');
-        
-        let steps = [
-            "Перевірка ліцензії...",
-            "Обхід античіта Arizona RP...",
-            "Завантаження Rezona_Core.dll...",
-            "Майже готово..."
-        ];
-        
-        let i = 0;
-        let interval = setInterval(() => {
-            st.innerText = steps[i];
-            i++;
-            if(i >= steps.length) {
-                clearInterval(interval);
-                setTimeout(() => {
-                    document.getElementById('proc-box').style.display = 'none';
-                    document.getElementById('final-prank').style.display = 'block';
-                }, 1000);
+        // Генеруємо 60 товарів (по 20 на категорію)
+        categories.forEach(cat => {
+            for(let i=1; i<=20; i++) {
+                items.push({
+                    id: Math.random(),
+                    category: cat,
+                    name: `${cat.split(' ')[1]} #${i}`,
+                    price: Math.floor(Math.random() * 4000) + 200,
+                    img: `https://picsum.photos/200/200?random=${Math.random()}`
+                });
             }
-        }, 1200);
-    }
-</script>
+        });
 
+        function renderShop(list = items) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = list.map(item => `
+                <div class="card">
+                    <img src="${item.img}">
+                    <h3>${item.name}</h3>
+                    <div class="price">${item.price} грн</div>
+                    <button class="btn-main" onclick="addToCart('${item.id}')">У кошик</button>
+                </div>
+            `).join('');
+        }
+
+        function filterItems(cat, el) {
+            switchTab(el);
+            document.getElementById('cat-title').innerText = cat;
+            renderShop(items.filter(i => i.category === cat));
+        }
+
+        function switchTab(el) {
+            document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
+            const target = el.getAttribute('data-target');
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(target).classList.add('active');
+            if(target === 'cart') renderCart();
+        }
+
+        function addToCart(id) {
+            const item = items.find(i => i.id == id);
+            cart.push(item);
+            document.getElementById('cart-count').innerText = cart.length;
+            alert("Товар додано!");
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            document.getElementById('cart-count').innerText = cart.length;
+            renderCart();
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cart-list');
+            const summary = document.getElementById('cart-summary');
+            if(cart.length === 0) {
+                list.innerHTML = "Кошик порожній...";
+                summary.style.display = 'none';
+            } else {
+                list.innerHTML = cart.map((item, index) => `
+                    <div class="cart-item">
+                        <span><b>${item.name}</b></span>
+                        <span>${item.price} грн <button class="btn-del" onclick="removeFromCart(${index})">[Видалити]</button></span>
+                    </div>
+                `).join('');
+                summary.style.display = 'block';
+                document.getElementById('total-price').innerText = cart.reduce((s, i) => s + i.price, 0);
+            }
+        }
+
+        function processPayment() {
+            document.getElementById('overlay').style.display = 'flex';
+            setTimeout(() => { document.getElementById('status').innerText = "Перевірка картки..."; }, 1500);
+            setTimeout(() => { document.getElementById('status').innerText = "Підтвердження від банку..."; }, 3000);
+            setTimeout(() => {
+                document.getElementById('loader-box').style.display = 'none';
+                document.getElementById('success-box').style.display = 'block';
+                document.getElementById('order-num').innerText = Math.floor(Math.random()*900000)+100000;
+                document.getElementById('delivery-info').innerText = document.getElementById('delivery').value;
+                document.getElementById('wait-time').innerText = (Math.floor(Math.random()*5)+1) + " дн.";
+            }, 5000);
+        }
+    </script>
+
+    <style> @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } </style>
+    <script>renderShop();</script>
 </body>
 </html>
