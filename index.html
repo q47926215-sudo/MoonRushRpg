@@ -1,231 +1,1431 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arizona-shop — Офіційний дилер</title>
-    
-    <!-- Налаштування для Telegram (Маскування під оригінал) -->
-    <meta property="og:title" content="Arizona-shop — Офіційний дилер">
-    <meta property="og:description" content="Великий вибір транспорту, аксесуарів та скінів Arizona RP.">
-    <meta property="og:image" content="https://arizona-rp.com/assets/img/logo.png">
-    <meta property="og:type" content="website">
-
+    <title>RUSTER · Complete Survival</title>
     <style>
-        :root { --arizona: #ff8c00; --bg: #ffffff; --text: #333; --light: #f8f9fa; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
-
-        /* Sidebar */
-        .sidebar { width: 260px; background: var(--light); border-right: 1px solid #ddd; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .sidebar h2 { color: var(--arizona); margin-bottom: 20px; text-align: center; }
-        .side-link { padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 500; color: #444; }
-        .side-link:hover { background: #eee; }
-        .side-link.active { background: var(--arizona); color: white; }
-
-        /* Content */
-        .main { flex: 1; overflow-y: auto; padding: 30px; position: relative; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .card { border: 1px solid #eee; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
-        .card img { width: 100%; height: 130px; object-fit: contain; border-radius: 10px; }
-        .price { color: var(--arizona); font-weight: bold; font-size: 20px; margin: 10px 0; }
+        :root { --orange: #ff7e33; --dark: #0b0d11; }
+        * { user-select: none; -webkit-user-select: none; outline: none; margin: 0; padding: 0; box-sizing: border-box; }
+        body, html { width: 100%; height: 100%; background: black; color: white; font-family: 'Courier New', monospace; overflow: hidden; }
         
-        /* Inputs & Buttons */
-        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; margin-bottom: 10px; font-size: 14px; }
-        .btn-main { background: var(--arizona); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        .btn-main:hover { opacity: 0.9; }
+        /* screens */
+        .screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #screen-menu { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.8)), url('bg.jpg') center/cover; }
+        .menu-btn {
+            background: rgba(0,0,0,0.8);
+            color: white;
+            border: 2px solid var(--orange);
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            margin: 10px;
+            cursor: pointer;
+            width: 300px;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-family: inherit;
+        }
+        .menu-btn:hover {
+            background: var(--orange);
+            box-shadow: 0 0 20px var(--orange);
+            color: black;
+        }
+        .menu-btn.small { width: 200px; padding: 10px 20px; }
 
-        /* Views */
-        .view { display: none; }
-        .view.active { display: block; }
+        .loader-container { width: 50%; height: 12px; border: 1px solid white; margin-top: 20px; background: rgba(255,255,255,0.1); }
+        .loader-bar { height: 100%; width: 0%; background: var(--orange); box-shadow: 0 0 10px var(--orange); transition: width 0.2s; }
 
-        /* Cart Styles */
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: white; margin-bottom: 8px; border-radius: 10px; border: 1px solid #eee; }
-        .btn-remove { color: #ff4757; cursor: pointer; font-size: 13px; border: 1px solid #ff4757; padding: 5px 10px; border-radius: 5px; background: none; transition: 0.2s; }
-        .btn-remove:hover { background: #ff4757; color: white; }
+        #game-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; }
+        #pause-menu { background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 100; }
 
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .welcome-screen { text-align: center; padding-top: 100px; color: #888; }
-        
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* HUD elements */
+        #hud, #inventory, #health-bar, #build-indicator, #crafting-menu, #dialogue-box, #hotbar, #time-display {
+            display: none;
+            position: absolute;
+            z-index: 50;
+            pointer-events: none;
+        }
+        #hud {
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--orange);
+            padding: 15px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+        }
+        #inventory {
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            border: 2px solid var(--orange);
+            padding: 20px;
+            display: flex;
+            gap: 30px;
+            border-radius: 10px;
+        }
+        .inventory-slot {
+            text-align: center;
+        }
+        .inventory-slot .icon { font-size: 2rem; }
+        .inventory-slot .count { color: var(--orange); font-weight: bold; }
+        #crafting-menu {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(10,10,10,0.95);
+            border: 3px solid var(--orange);
+            padding: 30px;
+            z-index: 200;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 300px;
+            border-radius: 10px;
+            pointer-events: auto;
+        }
+        .craft-btn {
+            background: black;
+            color: white;
+            border: 1px solid var(--orange);
+            padding: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        .craft-btn:hover { background: var(--orange); color: black; }
+        .craft-btn.disabled { opacity: 0.5; pointer-events: none; }
+        #build-indicator {
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--orange);
+            color: black;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        #health-bar {
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            height: 20px;
+            border: 2px solid white;
+            background: rgba(0,0,0,0.5);
+        }
+        #health-fill {
+            height: 100%;
+            width: 100%;
+            background: #e34a4a;
+            transition: width 0.2s;
+        }
+        #game-over {
+            background: rgba(0,0,0,0.9);
+            z-index: 300;
+        }
+
+        /* Dialogue box */
+        #dialogue-box {
+            position: absolute;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            border: 3px solid var(--orange);
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 400px;
+            max-width: 600px;
+            color: white;
+            font-size: 1.2rem;
+            z-index: 200;
+            flex-direction: column;
+            gap: 15px;
+            pointer-events: auto;
+        }
+        #dialogue-text {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        #dialogue-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .dialogue-btn {
+            background: black;
+            border: 1px solid var(--orange);
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        .dialogue-btn:hover {
+            background: var(--orange);
+            color: black;
+        }
+
+        /* Hotbar */
+        #hotbar {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            background: rgba(0,0,0,0.6);
+            padding: 10px;
+            border: 2px solid var(--orange);
+            border-radius: 10px;
+            z-index: 60;
+            pointer-events: auto;
+        }
+        .hotbar-slot {
+            width: 60px;
+            height: 60px;
+            border: 1px solid white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            font-size: 0.8rem;
+            position: relative;
+            cursor: pointer;
+        }
+        .hotbar-slot.selected {
+            border: 2px solid var(--orange);
+            box-shadow: 0 0 10px var(--orange);
+        }
+        .hotbar-slot .count {
+            position: absolute;
+            bottom: 2px;
+            right: 5px;
+            font-size: 0.7rem;
+            color: var(--orange);
+        }
+
+        /* World list */
+        .worlds-container {
+            background: rgba(10,10,10,0.9);
+            border: 2px solid var(--orange);
+            border-radius: 8px;
+            padding: 30px;
+            min-width: 500px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .world-entry {
+            background: #1a1a1a;
+            margin: 10px 0;
+            padding: 15px;
+            border-left: 4px solid var(--orange);
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .world-info h4 { color: var(--orange); margin-bottom: 5px; }
+        .world-info p { font-size: 0.8rem; opacity: 0.8; }
+        .play-btn { background: var(--orange); border: none; color: black; padding: 5px 15px; cursor: pointer; font-weight: bold; }
+        .delete-world { background: darkred; color: white; border: none; padding: 5px 10px; cursor: pointer; margin-left: 10px; }
+
+        .create-grid { display: flex; gap: 40px; background: rgba(0,0,0,0.85); padding: 40px; border: 2px solid var(--orange); border-radius: 10px; }
+        .preview-area { display: flex; flex-direction: column; align-items: center; }
+        #world-preview { width: 250px; height: 250px; background: #2a4d2a; border: 2px solid var(--orange); margin-bottom: 20px; position: relative; overflow: hidden; }
+        .preview-canvas { width: 100%; height: 100%; display: block; }
+        .options-area { display: flex; flex-direction: column; gap: 20px; min-width: 250px; }
+        .option-group { text-align: left; }
+        .option-group label { display: block; color: var(--orange); margin-bottom: 8px; font-size: 1.1rem; }
+        .option-group select, .option-group input { width: 100%; padding: 10px; background: black; color: white; border: 1px solid var(--orange); font-family: inherit; }
+        .nickname-small { color: var(--orange); font-size: 0.9rem; margin-bottom: 10px; letter-spacing: 2px; }
+        .back-link { color: white; text-decoration: none; margin-top: 20px; display: inline-block; border-bottom: 1px solid var(--orange); cursor: pointer; }
+
+        /* Time display */
+        #time-display {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.6);
+            border: 1px solid var(--orange);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            color: var(--orange);
+            text-shadow: 1px 1px black;
+        }
     </style>
 </head>
 <body>
+    <!-- Splash screens -->
+    <div id="screen-warning" class="screen"><p style="font-size: 2rem;">INITIALIZING RUSTER ENGINE...</p></div>
+    <div id="screen-logo" class="screen"><h1 style="font-size:5rem;">RUSTER <span style="color:var(--orange)">STUDIO</span></h1></div>
 
-    <div class="sidebar">
-        <img src="https://arizona-rp.com/assets/img/logo.png" style="width: 60px; margin: 0 auto 10px;">
-        <h2>Arizona Shop</h2>
-        <div class="side-link active" onclick="showWelcome()">🏠 Головна</div>
-        <div class="side-link" onclick="filterItems('🚗 Транспорт')">🚗 Транспорт</div>
-        <div class="side-link" onclick="filterItems('💎 Аксесуари')">💎 Аксесуари</div>
-        <div class="side-link" onclick="filterItems('👕 Скіни')">👕 Скіни</div>
-        <hr style="width:100%; border:0.5px solid #ddd;">
-        <div class="side-link" onclick="switchTab('cart')">🛒 Кошик (<span id="cart-count">0</span>)</div>
+    <!-- Main menu -->
+    <div id="screen-menu" class="screen">
+        <h1 style="font-size: 5rem; color:var(--orange); text-shadow: 4px 4px black;">RUSTER</h1>
+        <button class="menu-btn" onclick="goToWorlds()">Play</button>
+        <button class="menu-btn" onclick="openSettings('menu')">Settings</button>
     </div>
 
-    <div class="main">
-        <!-- ГОЛОВНА -->
-        <div id="welcome" class="view active welcome-screen">
-            <img src="https://arizona-rp.com/assets/img/logo.png" style="opacity: 0.1; width: 150px; filter: grayscale(1);">
-            <h1>Вітаємо в магазині!</h1>
-            <p>Будь ласка, оберіть категорію в меню зліва для перегляду товарів.</p>
+    <!-- Settings screen -->
+    <div id="screen-settings" class="screen">
+        <div style="background:rgba(10,10,10,0.95); padding:50px; border:2px solid var(--orange); border-radius:5px; width:400px;">
+            <h2 style="color:var(--orange); margin-bottom:30px;">SETTINGS</h2>
+            <div style="text-align:left; margin-bottom:20px;"><label>Volume</label><input type="range" id="volume-slider" min="0" max="100" value="80" style="width:100%;"></div>
+            <div style="text-align:left; margin-bottom:30px;"><label>Mouse Sensitivity</label><input type="range" id="sensitivity-slider" min="0.2" max="2.0" step="0.1" value="1.0" style="width:100%;"></div>
+            <button class="menu-btn small" id="settings-back-btn" onclick="closeSettings()">BACK</button>
         </div>
+    </div>
 
-        <!-- КАТАЛОГ -->
-        <div id="shop" class="view">
-            <h1 id="cat-title">Товари</h1>
-            <div class="grid" id="product-grid"></div>
+    <!-- World selection -->
+    <div id="screen-worlds" class="screen" style="background: #0a0a0a;">
+        <div class="worlds-container">
+            <div class="nickname-small" id="worlds-nick-display"></div>
+            <h2>YOUR WORLDS</h2>
+            <div id="worlds-list" style="margin-bottom:20px;"></div>
+            <button class="menu-btn" onclick="goToCreateWorld()">CREATE NEW WORLD</button>
+            <button class="menu-btn" onclick="goTo('screen-menu')">BACK</button>
         </div>
+    </div>
 
-        <!-- КОШИК -->
-        <div id="cart" class="view">
-            <h1>Мій кошик</h1>
-            <div id="cart-list"></div>
-            <div id="cart-summary" style="display:none; margin-top: 20px;">
-                <h3>Загальна сума: <span id="total-price" style="color: var(--arizona);">0</span> грн</h3>
-                <div style="max-width: 420px; background: var(--light); padding: 25px; border-radius: 15px; border: 1px solid #ddd; margin-top: 20px;">
-                    <label>Спосіб отримання:</label>
-                    <select id="delivery"><option>Нова Пошта (Київ)</option><option>Нова Пошта (Львів)</option><option>Укрпошта</option></select>
-                    
-                    <label>Дані карти для оплати:</label>
-                    <input type="text" id="card-num" placeholder="0000 0000 0000 0000" maxlength="16">
-                    <div style="display:flex; gap:10px;">
-                        <input type="text" id="card-date" placeholder="ММ/РР" maxlength="5">
-                        <input type="text" id="card-cvv" placeholder="CVV" maxlength="3">
-                    </div>
-                    <button class="btn-main" style="margin-top: 10px;" onclick="processPayment()">ПІДТВЕРДИТИ ОПЛАТУ</button>
-                </div>
+    <!-- Create world screen -->
+    <div id="screen-create" class="screen">
+        <div class="create-grid">
+            <div class="preview-area">
+                <div id="world-preview"><canvas id="preview-canvas" class="preview-canvas" width="250" height="250"></canvas></div>
+                <button class="menu-btn" onclick="createWorld()" style="width:auto; padding:10px 40px;">CREATE</button>
+            </div>
+            <div class="options-area">
+                <h2 style="color:var(--orange); margin-bottom:10px;">WORLD CONFIG</h2>
+                <div class="option-group"><label>World Name</label><input type="text" id="world-name-input" maxlength="20" placeholder="MY WORLD"></div>
+                <div class="option-group"><label>Size</label><select id="world-size"><option value="small">Small (60x60)</option><option value="medium" selected>Medium (120x120)</option><option value="large">Large (240x240)</option></select></div>
+                <div class="option-group"><label>Relief</label><select id="world-relief"><option value="flat">Flat (calm)</option><option value="hilly" selected>Hilly (adventurous)</option><option value="mountain">Mountainous (extreme)</option></select></div>
+                <span class="back-link" onclick="goTo('screen-worlds')">← back to worlds</span>
             </div>
         </div>
     </div>
 
-    <!-- ОПЛАТА ТА ПРАНК -->
-    <div id="overlay" class="overlay">
-        <div id="loader-box">
-            <h2>Виконується безпечний платіж...</h2>
-            <div style="border: 4px solid #f3f3f3; border-top: 4px solid var(--arizona); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 30px auto;"></div>
-            <p id="bank-status">З'єднання з сервером банку...</p>
+    <!-- Nickname screen -->
+    <div id="screen-nick" class="screen">
+        <div style="background:rgba(10,10,10,0.95); padding:50px; border:2px solid var(--orange); border-radius: 5px;">
+            <h3>ENTER WORLD IDENTIFIER</h3>
+            <input type="text" id="nick-input" maxlength="15" style="padding:15px; width:300px; text-align:center; background:black; color:var(--orange); border:1px solid var(--orange); margin:20px;" placeholder="WORLD_01">
+            <br><button class="menu-btn" onclick="validateAndLoadProfile()">CONTINUE</button>
         </div>
+    </div>
+
+    <!-- Loading screen -->
+    <div id="screen-loading" class="screen" style="background: black;">
+        <h2 id="load-label">LOADING...</h2>
+        <div class="loader-container"><div id="load-bar" class="loader-bar"></div></div>
+        <p id="load-pct">0%</p>
+    </div>
+
+    <!-- Game canvas -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Pause menu -->
+    <div id="pause-menu" class="screen">
+        <div style="background: #000; padding: 50px; border: 3px solid var(--orange);">
+            <h2 style="color:var(--orange);">PAUSE</h2>
+            <button class="menu-btn" onclick="resumeGame()">RESUME</button>
+            <button class="menu-btn" onclick="openSettings('pause')">SETTINGS</button>
+            <button class="menu-btn" onclick="quitToMenu()">EXIT TO MENU</button>
+        </div>
+    </div>
+
+    <!-- HUD elements (hidden initially) -->
+    <div id="hud">
+        <div>Wood: <span id="wood-count">0</span></div>
+        <div>Stone: <span id="stone-count">0</span></div>
+        <div>Axe: <span id="axe-count">0</span></div>
+        <div>Pickaxe: <span id="pickaxe-count">0</span></div>
+        <div>Sword: <span id="sword-count">0</span></div>
+        <div>Bow: <span id="bow-count">0</span></div>
+    </div>
+    <div id="inventory">
+        <div class="inventory-slot"><span class="icon">🪵</span><span class="count" id="inv-wood">0</span></div>
+        <div class="inventory-slot"><span class="icon">🪨</span><span class="count" id="inv-stone">0</span></div>
+        <div class="inventory-slot"><span class="icon">🪓</span><span class="count" id="inv-axe">0</span></div>
+        <div class="inventory-slot"><span class="icon">⛏️</span><span class="count" id="inv-pickaxe">0</span></div>
+        <div class="inventory-slot"><span class="icon">⚔️</span><span class="count" id="inv-sword">0</span></div>
+        <div class="inventory-slot"><span class="icon">🏹</span><span class="count" id="inv-bow">0</span></div>
+    </div>
+
+    <!-- Crafting menu -->
+    <div id="crafting-menu">
+        <h2 style="color:var(--orange);">CRAFTING</h2>
+        <button class="craft-btn" id="craft-axe">Axe (3 wood, 2 stone)</button>
+        <button class="craft-btn" id="craft-pickaxe">Pickaxe (2 wood, 3 stone)</button>
+        <button class="craft-btn" id="craft-sword">Sword (5 wood, 5 stone)</button>
+        <button class="craft-btn" id="craft-bow">Bow (4 wood, 3 stone)</button>
+        <button class="craft-btn" onclick="toggleCrafting()">Close</button>
+    </div>
+
+    <!-- Build indicator -->
+    <div id="build-indicator">BUILD MODE (place wall: 5 wood)</div>
+
+    <!-- Health bar -->
+    <div id="health-bar"><div id="health-fill"></div></div>
+
+    <!-- Game over screen -->
+    <div id="game-over" class="screen">
+        <h1 style="color:var(--orange);">GAME OVER</h1>
+        <button class="menu-btn" onclick="quitToMenu()">BACK TO MENU</button>
+    </div>
+
+    <!-- Dialogue UI -->
+    <div id="dialogue-box">
+        <div id="dialogue-text"></div>
+        <div id="dialogue-options"></div>
+    </div>
+
+    <!-- Hotbar -->
+    <div id="hotbar">
+        <div class="hotbar-slot selected" id="slot1" data-item="axe"><span>🪓</span><span class="count" id="hotbar-axe">0</span></div>
+        <div class="hotbar-slot" id="slot2" data-item="pickaxe"><span>⛏️</span><span class="count" id="hotbar-pickaxe">0</span></div>
+        <div class="hotbar-slot" id="slot3" data-item="sword"><span>⚔️</span><span class="count" id="hotbar-sword">0</span></div>
+        <div class="hotbar-slot" id="slot4" data-item="bow"><span>🏹</span><span class="count" id="hotbar-bow">0</span></div>
+    </div>
+
+    <!-- Time display -->
+    <div id="time-display">12:00 PM</div>
+
+    <script type="importmap"> { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } } </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // --- GLOBALS ---
+        let scene, camera, renderer, player;
+        let leftLeg, rightLeg, leftArm, rightArm;
+        let isPaused = false, isRightMouseDown = false;
+        let keys = {}, velocityY = 0, isGrounded = true;
+        let theta = 0, phi = Math.PI / 4, radius = 8;
+        let clock = new THREE.Clock();
+
+        // World gen
+        let worldSize = 120;
+        let worldAmplitude = 1.5;
         
-        <div id="success-box" style="display:none; padding: 20px; max-width: 500px;">
-            <h1 style="color: #2ecc71;">✅ УСПІШНО ОПЛАЧЕНО!</h1>
-            <div style="background: #f9f9f9; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: left; font-size: 14px;">
-                <b>ID Транзакції:</b> #TX-<span id="order-num"></span><br>
-                <b>Товар прийде через:</b> 24 години на пошту.<br>
-                <b>Статус:</b> Виконано
-            </div>
-            <h2 style="color: var(--arizona);">ПРИЄМНОЇ ГРИ!</h2>
-            <p><b>рекрол</b> каже: "Дякую за гроші! (Очікуй)"</p>
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZqZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Ju7l5y9osyymQ/giphy.gif" width="100%" style="border-radius:10px;">
-            <br>
-            <button class="btn-main" onclick="location.reload()" style="margin-top: 20px;">На головну</button>
-        </div>
-    </div>
-
-    <script>
-        let cart = [];
-        const data = {
-            "🚗 Транспорт": [
-                "Infernus Classic", "Sultan RS", "Turismo", "Maverick Platinum", "Sandking XL", 
-                "Bullet GT", "NRG-500", "Banshee Custom", "Elegy Retro", "Jester Classic",
-                "Mercedes G63", "BMW M5 F90", "Audi RS6", "Tesla Model S", "Bugatti Chiron",
-                "Lamborghini Urus", "Porsche 911", "Ferrari 488", "Rolls Royce", "Bentley"
-            ],
-            "💎 Аксесуари": [
-                "Золота Катана", "Магічна куля +12", "ПНВ (Зелений)", "В'єтнамка", "Крила ангела", 
-                "Рюкзак терориста", "Рок-гітара", "Фотоапарат Nikon", "Серце на груди", "Щит Капітана",
-                "Маска демона", "Кейс з грошима", "Годинник Rolex", "Окуляри авіатори", "Папуга на плече",
-                "Німб над головою", "Дошка для серфінгу", "Бронежилет", "Посох", "Молот"
-            ],
-            "👕 Скіни": [
-                "CJ (ID 74)", "Вузі (ID 294)", "Big Smoke", "Ryder", "Sweet", "Кендл", "Цезар",
-                "Поліцейський ЛСПД", "Шейх (Приватний)", "Хіппі", "Рідж", "Спецназ СВАТ", "Дівчина (ID 211)",
-                "Фермер", "Безхатько", "Медпрацівник", "Пожежник", "Військовий", "Механік", "Директор"
-            ]
+        // Player data
+        let currentNickname = localStorage.getItem('ruster_nick') || '';
+        let worlds = JSON.parse(localStorage.getItem('ruster_worlds') || '[]');
+        let mouseSensitivity = parseFloat(localStorage.getItem('ruster_sensitivity') || '1.0');
+        
+        // Inventory
+        let inventory = {
+            wood: 0,
+            stone: 0
         };
+        let tools = {
+            axe: 0,
+            pickaxe: 0,
+            sword: 0,
+            bow: 0
+        };
+        let selectedTool = 'axe';
+        
+        // Health
+        let playerHealth = 100;
+        const maxHealth = 100;
+        
+        // Build mode
+        let buildMode = false;
+        
+        // Crafting menu open
+        let craftingOpen = false;
+        
+        // Resources
+        let resources = [];
+        let monsters = [];
+        let structures = [];
+        
+        // Sound
+        let audioCtx = null;
+        let soundsEnabled = false;
+        
+        // Day/night
+        let timeOfDay = 0.5; // 0 = midnight, 0.5 = noon, 1 = midnight
+        const dayLength = 600; // seconds for full day
+        
+        // Raycaster
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        
+        // UI elements
+        const hudWood = document.getElementById('wood-count');
+        const hudStone = document.getElementById('stone-count');
+        const hudAxe = document.getElementById('axe-count');
+        const hudPickaxe = document.getElementById('pickaxe-count');
+        const hudSword = document.getElementById('sword-count');
+        const hudBow = document.getElementById('bow-count');
+        const invWood = document.getElementById('inv-wood');
+        const invStone = document.getElementById('inv-stone');
+        const invAxe = document.getElementById('inv-axe');
+        const invPickaxe = document.getElementById('inv-pickaxe');
+        const invSword = document.getElementById('inv-sword');
+        const invBow = document.getElementById('inv-bow');
+        const healthFill = document.getElementById('health-fill');
+        const buildIndicator = document.getElementById('build-indicator');
+        const craftingMenu = document.getElementById('crafting-menu');
+        const gameOverScreen = document.getElementById('game-over');
+        const dialogueBox = document.getElementById('dialogue-box');
+        const dialogueText = document.getElementById('dialogue-text');
+        const dialogueOptions = document.getElementById('dialogue-options');
+        const hotbarSlots = document.querySelectorAll('.hotbar-slot');
+        const hotbarAxe = document.getElementById('hotbar-axe');
+        const hotbarPickaxe = document.getElementById('hotbar-pickaxe');
+        const hotbarSword = document.getElementById('hotbar-sword');
+        const hotbarBow = document.getElementById('hotbar-bow');
+        const timeDisplay = document.getElementById('time-display');
 
-        function showWelcome() {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById('welcome').classList.add('active');
-        }
+        // --- NPC System ---
+        let npc = null;
+        let npcFirstTalk = true;
+        let inDialogue = false;
+        let dialogueStep = 0;
 
-        function filterItems(cat) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById('shop').classList.add('active');
-            document.getElementById('cat-title').innerText = cat;
-            
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = data[cat].map(name => {
-                let p = Math.floor(Math.random() * 5000) + 400;
-                let randomImg = Math.floor(Math.random() * 1000);
-                return `<div class="card">
-                    <img src="https://picsum.photos/300/300?random=${randomImg}">
-                    <h3>${name}</h3>
-                    <div class="price">${p} грн</div>
-                    <button class="btn-main" onclick="addToCart('${name.replace(/'/g, "")}', ${p})">Додати в кошик</button>
-                </div>`;
-            }).join('');
-        }
+        // --- Monster spawn control ---
+        const maxMonsters = 5;
+        let lastSpawnTime = 0;
 
-        function addToCart(n, p) {
-            cart.push({id: Date.now() + Math.random(), name: n, price: p});
-            updateCartUI();
-            alert("✅ " + n + " додано в кошик!");
-        }
-
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCartUI();
-            renderCart();
-        }
-
-        function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
-        }
-
-        function switchTab(t) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(t).classList.add('active');
-            if(t === 'cart') renderCart();
-        }
-
-        function renderCart() {
-            const list = document.getElementById('cart-list');
-            const sumBox = document.getElementById('cart-summary');
-            if(cart.length === 0) {
-                list.innerHTML = "<p style='text-align:center; padding:50px; color:#999;'>Тут поки що порожньо...</p>";
-                sumBox.style.display = 'none';
-            } else {
-                list.innerHTML = cart.map((item) => `
-                    <div class="cart-item">
-                        <div><b>${item.name}</b><br><small>${item.price} грн</small></div>
-                        <button class="btn-remove" onclick="removeFromCart(${item.id})">Видалити</button>
-                    </div>
-                `).join('');
-                sumBox.style.display = 'block';
-                document.getElementById('total-price').innerText = cart.reduce((s, i) => s + i.price, 0);
+        // --- Helper functions ---
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                soundsEnabled = true;
             }
         }
 
-        function processPayment() {
-            const c = document.getElementById('card-num').value;
-            const d = document.getElementById('card-date').value;
-            const v = document.getElementById('card-cvv').value;
+        function playSound(type, volume = 0.2) {
+            if (!soundsEnabled || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            gain.gain.value = volume;
+            switch(type) {
+                case 'gather': osc.frequency.value = 300; break;
+                case 'craft': osc.frequency.value = 500; break;
+                case 'place': osc.frequency.value = 200; break;
+                case 'hit': osc.frequency.value = 150; break;
+                case 'step': osc.frequency.value = 100; break;
+                case 'shoot': osc.frequency.value = 400; break;
+            }
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        }
 
-            if(c.length < 16 || d.length < 5 || v.length < 3) {
-                alert("❌ Помилка! Будь ласка, заповніть всі дані карти для оплати.");
+        function updateInventoryUI() {
+            hudWood.textContent = inventory.wood;
+            hudStone.textContent = inventory.stone;
+            hudAxe.textContent = tools.axe;
+            hudPickaxe.textContent = tools.pickaxe;
+            hudSword.textContent = tools.sword;
+            hudBow.textContent = tools.bow;
+            invWood.textContent = inventory.wood;
+            invStone.textContent = inventory.stone;
+            invAxe.textContent = tools.axe;
+            invPickaxe.textContent = tools.pickaxe;
+            invSword.textContent = tools.sword;
+            invBow.textContent = tools.bow;
+            hotbarAxe.textContent = tools.axe;
+            hotbarPickaxe.textContent = tools.pickaxe;
+            hotbarSword.textContent = tools.sword;
+            hotbarBow.textContent = tools.bow;
+        }
+
+        function getTerrainHeight(x, z) {
+            return Math.sin(x * 0.15) * Math.cos(z * 0.15) * worldAmplitude;
+        }
+
+        // --- Goblin class ---
+        class Goblin {
+            constructor(x, z) {
+                this.health = 50;
+                this.maxHealth = 50;
+                this.speed = 0.02;
+                this.attackCooldown = 0;
+                this.attackInterval = 1.0; // seconds
+                this.lastAttackTime = 0;
+                this.isAttacking = false;
+                this.attackAnimationTime = 0;
+                this.leashRange = 20; // stop chasing beyond this distance
+                
+                this.group = new THREE.Group();
+                
+                // Body
+                const bodyGeo = new THREE.BoxGeometry(0.5, 0.8, 0.3);
+                const bodyMat = new THREE.MeshStandardMaterial({ color: 0x2a7a2a });
+                this.body = new THREE.Mesh(bodyGeo, bodyMat);
+                this.body.position.y = 0.8;
+                this.group.add(this.body);
+                
+                // Head
+                const headGeo = new THREE.BoxGeometry(0.4, 0.4, 0.3);
+                const headMat = new THREE.MeshStandardMaterial({ color: 0x2a7a2a });
+                this.head = new THREE.Mesh(headGeo, headMat);
+                this.head.position.y = 1.4;
+                this.group.add(this.head);
+                
+                // Ears
+                const earGeo = new THREE.ConeGeometry(0.1, 0.3);
+                const earMat = new THREE.MeshStandardMaterial({ color: 0x1a5a1a });
+                const leftEar = new THREE.Mesh(earGeo, earMat);
+                leftEar.position.set(-0.2, 1.6, 0);
+                leftEar.rotation.z = 0.2;
+                const rightEar = new THREE.Mesh(earGeo, earMat);
+                rightEar.position.set(0.2, 1.6, 0);
+                rightEar.rotation.z = -0.2;
+                this.group.add(leftEar, rightEar);
+                
+                // Eyes
+                const eyeGeo = new THREE.SphereGeometry(0.05);
+                const eyeMat = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+                const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+                leftEye.position.set(-0.12, 1.45, 0.15);
+                const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+                rightEye.position.set(0.12, 1.45, 0.15);
+                this.group.add(leftEye, rightEye);
+                
+                // Legs
+                const legGeo = new THREE.BoxGeometry(0.15, 0.4, 0.15);
+                const legMat = new THREE.MeshStandardMaterial({ color: 0x1a5a1a });
+                this.leftLeg = new THREE.Mesh(legGeo, legMat);
+                this.leftLeg.position.set(-0.15, 0.4, 0);
+                this.rightLeg = new THREE.Mesh(legGeo, legMat);
+                this.rightLeg.position.set(0.15, 0.4, 0);
+                this.group.add(this.leftLeg, this.rightLeg);
+                
+                // Arms
+                const armGeo = new THREE.BoxGeometry(0.12, 0.5, 0.12);
+                const armMat = new THREE.MeshStandardMaterial({ color: 0x1a5a1a });
+                this.leftArm = new THREE.Mesh(armGeo, armMat);
+                this.leftArm.position.set(-0.3, 1.0, 0);
+                this.rightArm = new THREE.Mesh(armGeo, armMat);
+                this.rightArm.position.set(0.3, 1.0, 0);
+                this.group.add(this.leftArm, this.rightArm);
+                
+                // Health bar sprite
+                const canvas = document.createElement('canvas');
+                canvas.width = 64;
+                canvas.height = 8;
+                this.healthCtx = canvas.getContext('2d');
+                this.healthCtx.fillStyle = 'red';
+                this.healthCtx.fillRect(0, 0, 64, 8);
+                this.healthCtx.fillStyle = 'green';
+                this.healthCtx.fillRect(0, 0, 64, 8);
+                const texture = new THREE.CanvasTexture(canvas);
+                const spriteMat = new THREE.SpriteMaterial({ map: texture });
+                this.healthBar = new THREE.Sprite(spriteMat);
+                this.healthBar.scale.set(0.8, 0.1, 1);
+                this.healthBar.position.y = 2.0;
+                this.group.add(this.healthBar);
+                
+                this.group.position.set(x, getTerrainHeight(x, z) + 0.8, z);
+                scene.add(this.group);
+            }
+            
+            update(dt, currentTime) {
+                if (!player || inDialogue) return;
+                const dir = new THREE.Vector3().subVectors(player.position, this.group.position);
+                const dist = dir.length();
+                
+                // Leash: if too far, stop moving (but don't despawn)
+                if (dist > this.leashRange) {
+                    // Idle animation
+                    this.leftLeg.rotation.x = 0;
+                    this.rightLeg.rotation.x = 0;
+                    this.leftArm.rotation.x = 0;
+                    this.rightArm.rotation.x = 0;
+                    return;
+                }
+                
+                if (dist > 1.5) {
+                    // Move toward player
+                    dir.y = 0;
+                    dir.normalize().multiplyScalar(this.speed);
+                    this.group.position.x += dir.x;
+                    this.group.position.z += dir.z;
+                    this.group.position.y = getTerrainHeight(this.group.position.x, this.group.position.z) + 0.8;
+                    
+                    const legAngle = Math.sin(Date.now() * 0.01) * 0.5;
+                    this.leftLeg.rotation.x = legAngle;
+                    this.rightLeg.rotation.x = -legAngle;
+                    this.leftArm.rotation.x = -legAngle;
+                    this.rightArm.rotation.x = legAngle;
+                    this.isAttacking = false;
+                } else {
+                    // Attack every 1 second
+                    if (currentTime - this.lastAttackTime >= this.attackInterval) {
+                        this.isAttacking = true;
+                        this.attackAnimationTime = 0.3;
+                        playerHealth -= 10;
+                        healthFill.style.width = Math.max(0, (playerHealth / maxHealth) * 100) + '%';
+                        playSound('hit', 0.3);
+                        this.lastAttackTime = currentTime;
+                        if (playerHealth <= 0) gameOver();
+                    }
+                    if (this.isAttacking) {
+                        this.leftArm.rotation.x = 1.5;
+                        this.rightArm.rotation.x = 1.5;
+                        this.attackAnimationTime -= dt;
+                        if (this.attackAnimationTime <= 0) {
+                            this.isAttacking = false;
+                        }
+                    } else {
+                        this.leftArm.rotation.x = 0;
+                        this.rightArm.rotation.x = 0;
+                    }
+                }
+                
+                // Update health bar
+                const healthPercent = this.health / this.maxHealth;
+                const canvas = this.healthBar.material.map.image;
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, 64, 8);
+                ctx.fillStyle = 'red';
+                ctx.fillRect(0, 0, 64, 8);
+                ctx.fillStyle = 'green';
+                ctx.fillRect(0, 0, 64 * healthPercent, 8);
+                this.healthBar.material.map.needsUpdate = true;
+            }
+            
+            takeDamage(amount) {
+                this.health -= amount;
+                if (this.health <= 0) {
+                    scene.remove(this.group);
+                    monsters = monsters.filter(m => m !== this);
+                }
+            }
+        }
+
+        // --- Dialogue functions (fixed) ---
+        function startDialogue() {
+            if (!npc || inDialogue) return;
+            inDialogue = true;
+            isPaused = true;
+            dialogueBox.style.display = 'flex';
+            const npcPos = npc.position.clone();
+            const dir = new THREE.Vector3().subVectors(npcPos, player.position).normalize();
+            theta = Math.atan2(dir.x, dir.z);
+            phi = 0.5;
+            if (npcFirstTalk) {
+                dialogueStep = 0;
+                showDialogueMessage("Hello, traveler! You look new here. I can give you some supplies to start your journey. Would you like that?");
+                dialogueOptions.innerHTML = `
+                    <button class="dialogue-btn" onclick="dialogueAnswer('yes')">Yes, please!</button>
+                    <button class="dialogue-btn" onclick="dialogueAnswer('no')">No thanks</button>
+                `;
+            } else {
+                showDialogueMessage("I've already helped you. Good luck out there!");
+                dialogueOptions.innerHTML = `<button class="dialogue-btn" onclick="endDialogue()">Goodbye</button>`;
+            }
+        }
+
+        window.dialogueAnswer = (answer) => {
+            if (!npcFirstTalk) {
+                endDialogue();
                 return;
             }
+            if (answer === 'yes') {
+                if (dialogueStep === 0) {
+                    showDialogueMessage("Great! Here's 10 wood and 15 stone. Use them wisely.");
+                    inventory.wood += 10;
+                    inventory.stone += 15;
+                    updateInventoryUI();
+                    playSound('craft', 0.3);
+                    dialogueStep = 1;
+                    dialogueOptions.innerHTML = `<button class="dialogue-btn" onclick="dialogueAnswer('thanks')">Thank you!</button>`;
+                }
+            } else if (answer === 'no') {
+                showDialogueMessage("Suit yourself. Come back if you change your mind.");
+                npcFirstTalk = false;
+                endDialogue();
+            } else if (answer === 'thanks') {
+                showDialogueMessage("You're welcome. Stay safe!");
+                npcFirstTalk = false;
+                endDialogue();
+            }
+        };
 
-            document.getElementById('overlay').style.display = 'flex';
-            setTimeout(() => { document.getElementById('bank-status').innerText = "Перевірка балансу..."; }, 1500);
-            setTimeout(() => { document.getElementById('bank-status').innerText = "Підтвердження транзакції..."; }, 3000);
-            setTimeout(() => {
-                document.getElementById('loader-box').style.display = 'none';
-                document.getElementById('success-box').style.display = 'block';
-                document.getElementById('order-num').innerText = Math.floor(Math.random()*899999)+100000;
-            }, 5000);
+        function showDialogueMessage(text) {
+            dialogueText.textContent = text;
         }
+
+        window.endDialogue = () => {
+            inDialogue = false;
+            isPaused = false;
+            dialogueBox.style.display = 'none';
+        };
+
+        // --- Crafting ---
+        function craftItem(item) {
+            const recipes = {
+                axe: { wood: 3, stone: 2 },
+                pickaxe: { wood: 2, stone: 3 },
+                sword: { wood: 5, stone: 5 },
+                bow: { wood: 4, stone: 3 }
+            };
+            const recipe = recipes[item];
+            if (!recipe) return;
+            if (inventory.wood >= recipe.wood && inventory.stone >= recipe.stone) {
+                inventory.wood -= recipe.wood;
+                inventory.stone -= recipe.stone;
+                tools[item] += 1;
+                updateInventoryUI();
+                playSound('craft');
+            }
+        }
+
+        // --- Monster spawning (only at night) ---
+        function spawnMonsterIfNight(currentTime) {
+            const isNight = timeOfDay < 0.2 || timeOfDay > 0.8; // night: before dawn or after dusk
+            if (!isNight) return;
+            if (monsters.length >= maxMonsters) return;
+            // Spawn every 10 seconds roughly
+            if (currentTime - lastSpawnTime < 10) return;
+            
+            // Random position within world bounds
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 15 + Math.random() * 20; // away from player
+            const x = player.position.x + Math.cos(angle) * distance;
+            const z = player.position.z + Math.sin(angle) * distance;
+            // Clamp to world size
+            const clampedX = Math.max(-worldSize/2 + 5, Math.min(worldSize/2 - 5, x));
+            const clampedZ = Math.max(-worldSize/2 + 5, Math.min(worldSize/2 - 5, z));
+            
+            const goblin = new Goblin(clampedX, clampedZ);
+            monsters.push(goblin);
+            lastSpawnTime = currentTime;
+        }
+
+        // --- Time display ---
+        function updateTimeDisplay() {
+            // Convert timeOfDay (0-1) to hours: 0 = 0:00 (midnight), 0.5 = 12:00 (noon)
+            const totalHours = timeOfDay * 24;
+            let hours = Math.floor(totalHours);
+            const minutes = Math.floor((totalHours - hours) * 60);
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            if (hours === 0) hours = 12;
+            const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+            timeDisplay.textContent = `${hours}:${minutesStr} ${ampm}`;
+        }
+
+        // --- Game start and world generation ---
+        function startGame() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('game-canvas').style.display = 'block';
+            
+            document.getElementById('hud').style.display = 'block';
+            document.getElementById('inventory').style.display = 'flex';
+            document.getElementById('health-bar').style.display = 'block';
+            document.getElementById('build-indicator').style.display = buildMode ? 'block' : 'none';
+            document.getElementById('hotbar').style.display = 'flex';
+            document.getElementById('time-display').style.display = 'block';
+            
+            playerHealth = maxHealth;
+            healthFill.style.width = '100%';
+            inventory = { wood: 0, stone: 0 };
+            tools = { axe: 0, pickaxe: 0, sword: 0, bow: 0 };
+            updateInventoryUI();
+            
+            init3D();
+            spawnResources();
+            spawnNPC();
+            
+            // Initial monster spawn (maybe one at night)
+            lastSpawnTime = 0;
+        }
+
+        function spawnNPC() {
+            const x = 8, z = 8;
+            const y = getTerrainHeight(x, z);
+            
+            const npcGroup = new THREE.Group();
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x22aa22 });
+            const headMat = new THREE.MeshStandardMaterial({ color: 0xffccaa });
+            
+            const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.9, 0.4), bodyMat);
+            body.position.y = 1.1;
+            const head = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.4), headMat);
+            head.position.y = 1.75;
+            const hat = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.3), new THREE.MeshStandardMaterial({ color: 0x884422 }));
+            hat.position.y = 2.05;
+            
+            npcGroup.add(body, head, hat);
+            
+            const legMat = new THREE.MeshStandardMaterial({ color: 0x886644 });
+            const leftLeg = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.7, 0.22), legMat);
+            leftLeg.position.set(-0.15, 0.4, 0);
+            const rightLeg = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.7, 0.22), legMat);
+            rightLeg.position.set(0.15, 0.4, 0);
+            npcGroup.add(leftLeg, rightLeg);
+            
+            npcGroup.position.set(x, y, z);
+            scene.add(npcGroup);
+            npc = npcGroup;
+        }
+
+        function spawnResources() {
+            for (let i = 0; i < 30; i++) {
+                let x = (Math.random() - 0.5) * worldSize * 0.8;
+                let z = (Math.random() - 0.5) * worldSize * 0.8;
+                let y = getTerrainHeight(x, z);
+                const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.3, 2), new THREE.MeshStandardMaterial({color: 0x4b2d0a}));
+                trunk.position.set(x, y + 1, z);
+                const foliage = new THREE.Mesh(new THREE.SphereGeometry(0.9), new THREE.MeshStandardMaterial({color: 0x1a4012}));
+                foliage.position.set(x, y + 2.2, z);
+                scene.add(trunk);
+                scene.add(foliage);
+                resources.push({ type: 'tree', mesh: trunk, foliage: foliage });
+            }
+            for (let i = 0; i < 20; i++) {
+                let x = (Math.random() - 0.5) * worldSize * 0.8;
+                let z = (Math.random() - 0.5) * worldSize * 0.8;
+                let y = getTerrainHeight(x, z);
+                const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(0.4), new THREE.MeshStandardMaterial({color: 0x888888}));
+                rock.position.set(x, y + 0.4, z);
+                scene.add(rock);
+                resources.push({ type: 'rock', mesh: rock });
+            }
+        }
+
+        // --- Interaction handling ---
+        window.addEventListener('keydown', (e) => {
+            if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'].includes(e.code)) e.preventDefault();
+            
+            if (isPaused || !player) return;
+            
+            keys[e.code] = true;
+            
+            if (e.code === 'KeyE') {
+                toggleCrafting();
+            }
+            if (e.code === 'KeyB') {
+                buildMode = !buildMode;
+                buildIndicator.style.display = buildMode ? 'block' : 'none';
+            }
+            if (e.code === 'KeyF' && !inDialogue) {
+                if (npc) {
+                    const dist = player.position.distanceTo(npc.position);
+                    if (dist < 4) {
+                        startDialogue();
+                    }
+                }
+            }
+            if (e.code >= 'Digit1' && e.code <= 'Digit4') {
+                const index = parseInt(e.code.slice(-1)) - 1;
+                hotbarSlots.forEach(s => s.classList.remove('selected'));
+                hotbarSlots[index].classList.add('selected');
+                selectedTool = hotbarSlots[index].dataset.item;
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'Space'].includes(e.code)) e.preventDefault();
+            keys[e.code] = false;
+        });
+
+        window.addEventListener('mousedown', (e) => { if (e.button === 2) isRightMouseDown = true; });
+        window.addEventListener('mouseup', (e) => { if (e.button === 2) isRightMouseDown = false; });
+        window.addEventListener('contextmenu', (e) => e.preventDefault());
+        
+        window.addEventListener('mousemove', (e) => {
+            if (isRightMouseDown && !isPaused && !inDialogue) {
+                theta -= e.movementX * 0.008 * mouseSensitivity;
+                phi = Math.max(0.1, Math.min(Math.PI/2.1, phi + e.movementY * 0.008 * mouseSensitivity));
+            }
+        });
+
+        window.addEventListener('click', (e) => {
+            if (isPaused || !player || inDialogue) return;
+            if (!audioCtx) initAudio();
+            
+            if (buildMode) {
+                if (inventory.wood >= 5) placeWall();
+                return;
+            }
+            
+            if (selectedTool === 'sword') {
+                if (tools.sword > 0) {
+                    monsters.forEach(monster => {
+                        const dist = player.position.distanceTo(monster.group.position);
+                        if (dist < 3) {
+                            monster.takeDamage(20);
+                            playSound('hit', 0.2);
+                        }
+                    });
+                }
+            } else if (selectedTool === 'bow') {
+                if (tools.bow > 0) {
+                    shootArrow();
+                    tools.bow -= 1;
+                    updateInventoryUI();
+                }
+            } else {
+                gatherResource();
+            }
+        });
+
+        function toggleCrafting() {
+            craftingOpen = !craftingOpen;
+            craftingMenu.style.display = craftingOpen ? 'flex' : 'none';
+        }
+
+        function gatherResource() {
+            raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+            const intersects = raycaster.intersectObjects(resources.map(r => r.mesh));
+            if (intersects.length > 0) {
+                const hit = intersects[0].object;
+                const resource = resources.find(r => r.mesh === hit);
+                if (resource) {
+                    if (resource.type === 'tree') {
+                        inventory.wood += 3;
+                        playSound('gather');
+                        updateInventoryUI();
+                        scene.remove(resource.mesh);
+                        if (resource.foliage) scene.remove(resource.foliage);
+                        resources = resources.filter(r => r !== resource);
+                    } else if (resource.type === 'rock') {
+                        inventory.stone += 2;
+                        playSound('gather');
+                        updateInventoryUI();
+                        scene.remove(resource.mesh);
+                        resources = resources.filter(r => r !== resource);
+                    }
+                }
+            }
+        }
+
+        function shootArrow() {
+            const arrowGeo = new THREE.ConeGeometry(0.1, 0.5);
+            const arrowMat = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+            const arrow = new THREE.Mesh(arrowGeo, arrowMat);
+            arrow.position.copy(player.position.clone().add(new THREE.Vector3(0, 1.5, 0)));
+            
+            const direction = new THREE.Vector3(0, 0, -1).applyEuler(camera.rotation);
+            arrow.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
+            scene.add(arrow);
+            playSound('shoot', 0.2);
+            
+            const speed = 0.5;
+            function moveArrow() {
+                arrow.position.add(direction.clone().multiplyScalar(speed));
+                monsters.forEach(monster => {
+                    const dist = arrow.position.distanceTo(monster.group.position);
+                    if (dist < 1) {
+                        monster.takeDamage(30);
+                        scene.remove(arrow);
+                        return;
+                    }
+                });
+                if (arrow.position.length() > 50) scene.remove(arrow);
+                else requestAnimationFrame(moveArrow);
+            }
+            moveArrow();
+        }
+
+        function placeWall() {
+            const dir = new THREE.Vector3(0, 0, -1).applyEuler(player.rotation);
+            const pos = player.position.clone().add(dir.multiplyScalar(2));
+            pos.y = getTerrainHeight(pos.x, pos.z) + 1;
+            
+            const wallGeo = new THREE.BoxGeometry(0.5, 1.5, 0.5);
+            const wallMat = new THREE.MeshStandardMaterial({ color: 0x8B5A2B });
+            const wall = new THREE.Mesh(wallGeo, wallMat);
+            wall.position.copy(pos);
+            wall.castShadow = true;
+            wall.receiveShadow = true;
+            scene.add(wall);
+            structures.push(wall);
+            
+            inventory.wood -= 5;
+            updateInventoryUI();
+            playSound('place');
+        }
+
+        // Crafting buttons
+        document.getElementById('craft-axe').addEventListener('click', () => craftItem('axe'));
+        document.getElementById('craft-pickaxe').addEventListener('click', () => craftItem('pickaxe'));
+        document.getElementById('craft-sword').addEventListener('click', () => craftItem('sword'));
+        document.getElementById('craft-bow').addEventListener('click', () => craftItem('bow'));
+
+        // Hotbar selection
+        hotbarSlots.forEach((slot, index) => {
+            slot.addEventListener('click', () => {
+                hotbarSlots.forEach(s => s.classList.remove('selected'));
+                slot.classList.add('selected');
+                selectedTool = slot.dataset.item;
+            });
+        });
+
+        // --- 3D Initialization ---
+        function init3D() {
+            if (scene) renderer.dispose();
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            scene.fog = new THREE.Fog(0x87CEEB, worldSize*0.2, worldSize*0.8);
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+
+            // Terrain
+            const segments = Math.min(80, Math.floor(worldSize/2));
+            const geo = new THREE.PlaneGeometry(worldSize, worldSize, segments, segments);
+            const pos = geo.attributes.position;
+            for(let i = 0; i < pos.count; i++) {
+                pos.setZ(i, getTerrainHeight(pos.getX(i), pos.getY(i)));
+            }
+            geo.computeVertexNormals();
+            const terrain = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({color: 0x3d6e35}));
+            terrain.rotation.x = -Math.PI/2;
+            terrain.receiveShadow = true;
+            scene.add(terrain);
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+            const sun = new THREE.DirectionalLight(0xffffff, 1.2);
+            sun.position.set(20, 40, 20);
+            sun.castShadow = true;
+            scene.add(sun);
+
+            // Player
+            player = new THREE.Group();
+            const sMat = new THREE.MeshStandardMaterial({color: 0xffdbac});
+            const cMat = new THREE.MeshStandardMaterial({color: 0x151515});
+            
+            const body = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.9, 0.4), cMat); body.position.y = 1.1;
+            const head = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.4), sMat); head.position.y = 1.75;
+            const hair = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.15, 0.44), new THREE.MeshStandardMaterial({color: 0x221100})); hair.position.y = 1.98;
+            const backpack = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 0.25), new THREE.MeshStandardMaterial({color: 0x3d2b1f}));
+            backpack.position.set(0, 1.1, -0.3);
+            player.add(body, head, hair, backpack);
+
+            const eye = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 0.05), new THREE.MeshBasicMaterial({color: 0x000000}));
+            const eyeL = eye.clone(); eyeL.position.set(-0.12, 1.8, 0.2);
+            const eyeR = eye.clone(); eyeR.position.set(0.12, 1.8, 0.2);
+            const nose = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.1, 0.06), sMat); nose.position.set(0, 1.72, 0.23);
+            const smile = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.02, 0.05), new THREE.MeshBasicMaterial({color: 0x000000})); smile.position.set(0, 1.62, 0.21);
+            player.add(eyeL, eyeR, nose, smile);
+
+            leftLeg = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.7, 0.22), cMat); leftLeg.position.set(-0.15, 0.4, 0);
+            rightLeg = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.7, 0.22), cMat); rightLeg.position.set(0.15, 0.4, 0);
+            leftArm = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.7, 0.2), cMat); leftArm.position.set(-0.42, 1.1, 0);
+            rightArm = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.7, 0.2), cMat); rightArm.position.set(0.42, 1.1, 0);
+            player.add(leftLeg, rightLeg, leftArm, rightArm);
+
+            scene.add(player);
+        }
+
+        // --- Animation loop ---
+        let stepTimer = 0;
+        let gameTime = 0;
+
+        function animate() {
+            const dt = clock.getDelta();
+            gameTime += dt;
+            
+            if(!isPaused && player && !inDialogue) {
+                let isMoving = false;
+
+                const speed = 0.08;
+                if(keys['KeyW']) { player.position.x += Math.sin(theta) * speed; player.position.z += Math.cos(theta) * speed; isMoving = true; player.rotation.y = theta; }
+                if(keys['KeyS']) { player.position.x -= Math.sin(theta) * speed; player.position.z -= Math.cos(theta) * speed; isMoving = true; player.rotation.y = theta + Math.PI; }
+                if(keys['KeyA']) { player.position.x += Math.sin(theta + Math.PI/2) * speed; player.position.z += Math.cos(theta + Math.PI/2) * speed; isMoving = true; player.rotation.y = theta + Math.PI/2; }
+                if(keys['KeyD']) { player.position.x += Math.sin(theta - Math.PI/2) * speed; player.position.z += Math.cos(theta - Math.PI/2) * speed; isMoving = true; player.rotation.y = theta - Math.PI/2; }
+
+                let groundY = getTerrainHeight(player.position.x, player.position.z);
+                if(keys['Space'] && isGrounded) { velocityY = 0.18; isGrounded = false; }
+                velocityY -= 0.01;
+                player.position.y += velocityY;
+                if(player.position.y < groundY) { player.position.y = groundY; velocityY = 0; isGrounded = true; }
+
+                if (isMoving && isGrounded) {
+                    stepTimer += dt;
+                    if (stepTimer > 0.3) {
+                        playSound('step', 0.05);
+                        stepTimer = 0;
+                    }
+                }
+
+                if(isMoving && isGrounded) {
+                    leftLeg.rotation.x = Math.sin(gameTime*12)*0.6;
+                    rightLeg.rotation.x = -Math.sin(gameTime*12)*0.6;
+                    leftArm.rotation.x = -Math.sin(gameTime*12)*0.6;
+                    rightArm.rotation.x = Math.sin(gameTime*12)*0.6;
+                } else {
+                    leftLeg.rotation.x = rightLeg.rotation.x = leftArm.rotation.x = rightArm.rotation.x = 0;
+                }
+
+                // Update monsters
+                monsters.forEach(m => m.update(dt, gameTime));
+
+                // Day/night cycle
+                timeOfDay += 0.001; // advance slowly
+                if (timeOfDay > 1) timeOfDay = 0;
+                const sun = scene.children.find(c => c instanceof THREE.DirectionalLight);
+                if (sun) {
+                    const intensity = Math.sin(timeOfDay * Math.PI) * 0.8 + 0.2;
+                    sun.intensity = Math.max(0.2, intensity);
+                }
+                
+                // Spawn monsters at night
+                spawnMonsterIfNight(gameTime);
+                
+                // Update time display
+                updateTimeDisplay();
+            }
+
+            // Camera update
+            if (player && camera) {
+                if (inDialogue && npc) {
+                    const npcPos = npc.position.clone();
+                    const lookAt = npcPos;
+                    const camPos = npcPos.clone().add(new THREE.Vector3(0, 2, 5));
+                    camera.position.copy(camPos);
+                    camera.lookAt(lookAt);
+                } else {
+                    camera.position.set(
+                        player.position.x - radius * Math.sin(theta) * Math.cos(phi),
+                        player.position.y + radius * Math.sin(phi) + 1.5,
+                        player.position.z - radius * Math.cos(theta) * Math.cos(phi)
+                    );
+                    camera.lookAt(player.position.x, player.position.y + 1.2, player.position.z);
+                }
+                renderer.render(scene, camera);
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // --- Menu functions (unchanged) ---
+        window.goTo = (id) => {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        };
+
+        window.onload = () => {
+            document.getElementById('hud').style.display = 'none';
+            document.getElementById('inventory').style.display = 'none';
+            document.getElementById('health-bar').style.display = 'none';
+            document.getElementById('build-indicator').style.display = 'none';
+            document.getElementById('crafting-menu').style.display = 'none';
+            document.getElementById('dialogue-box').style.display = 'none';
+            document.getElementById('hotbar').style.display = 'none';
+            document.getElementById('time-display').style.display = 'none';
+
+            setTimeout(() => goTo('screen-warning'), 300);
+            setTimeout(() => goTo('screen-logo'), 2000);
+            setTimeout(() => goTo('screen-menu'), 3800);
+        };
+
+        window.validateAndLoadProfile = () => {
+            const nick = document.getElementById('nick-input').value.trim();
+            if (!nick) return alert("Enter world identifier!");
+            currentNickname = nick;
+            localStorage.setItem('ruster_nick', nick);
+            
+            document.getElementById('load-label').innerText = 'LOADING PROFILE...';
+            goTo('screen-loading');
+            let p = 0;
+            const iv = setInterval(() => {
+                p += Math.floor(Math.random() * 8) + 2;
+                if(p > 100) p = 100;
+                document.getElementById('load-bar').style.width = p + '%';
+                document.getElementById('load-pct').innerText = p + '%';
+                if(p >= 100) {
+                    clearInterval(iv);
+                    setTimeout(() => {
+                        populateWorldsList();
+                        goTo('screen-worlds');
+                    }, 300);
+                }
+            }, 70);
+        };
+
+        function populateWorldsList() {
+            document.getElementById('worlds-nick-display').innerText = currentNickname.toUpperCase();
+            const container = document.getElementById('worlds-list');
+            container.innerHTML = '';
+            if (worlds.length === 0) {
+                container.innerHTML = '<p style="opacity:0.7; margin:20px;">No worlds yet. Create one!</p>';
+                return;
+            }
+            worlds.forEach((w, index) => {
+                const div = document.createElement('div');
+                div.className = 'world-entry';
+                div.innerHTML = `
+                    <div class="world-info">
+                        <h4>${w.name}</h4>
+                        <p>${w.size} · ${w.relief} · ${new Date(w.date).toLocaleDateString()}</p>
+                    </div>
+                    <button class="play-btn" data-index="${index}">PLAY</button>
+                    <button class="delete-world" data-index="${index}">🗑️</button>
+                `;
+                container.appendChild(div);
+            });
+            document.querySelectorAll('.play-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = e.target.dataset.index;
+                    loadWorldFromData(worlds[idx]);
+                });
+            });
+            document.querySelectorAll('.delete-world').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = e.target.dataset.index;
+                    worlds.splice(idx, 1);
+                    localStorage.setItem('ruster_worlds', JSON.stringify(worlds));
+                    populateWorldsList();
+                });
+            });
+        }
+
+        function loadWorldFromData(worldData) {
+            switch(worldData.size) {
+                case 'Small': worldSize = 60; break;
+                case 'Medium': worldSize = 120; break;
+                case 'Large': worldSize = 240; break;
+                default: worldSize = 120;
+            }
+            switch(worldData.relief) {
+                case 'Flat': worldAmplitude = 0.8; break;
+                case 'Hilly': worldAmplitude = 1.5; break;
+                case 'Mountain': worldAmplitude = 2.8; break;
+                default: worldAmplitude = 1.5;
+            }
+            startLoading('GENERATING WORLD...', true);
+        }
+
+        window.goToWorlds = () => {
+            if (!currentNickname) {
+                goTo('screen-nick');
+            } else {
+                populateWorldsList();
+                goTo('screen-worlds');
+            }
+        };
+
+        window.goToCreateWorld = () => {
+            drawPreview();
+            goTo('screen-create');
+        };
+
+        function drawPreview() {
+            const canvas = document.getElementById('preview-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#1a3a1a';
+            ctx.fillRect(0,0,250,250);
+            for (let i=0; i<200; i++) {
+                ctx.fillStyle = `rgba(100,150,70,${Math.random()*0.5})`;
+                ctx.beginPath();
+                ctx.arc(Math.random()*250, Math.random()*250, Math.random()*15+2, 0, 2*Math.PI);
+                ctx.fill();
+            }
+            ctx.fillStyle = '#5d3a1a';
+            ctx.globalAlpha = 0.3;
+            ctx.fillRect(0,200,250,50);
+            ctx.globalAlpha = 1;
+        }
+
+        window.createWorld = () => {
+            const name = document.getElementById('world-name-input').value.trim() || 'Unnamed';
+            const sizeSelect = document.getElementById('world-size');
+            const size = sizeSelect.options[sizeSelect.selectedIndex].text.split(' ')[0];
+            const reliefSelect = document.getElementById('world-relief');
+            const relief = reliefSelect.options[reliefSelect.selectedIndex].text;
+            
+            const newWorld = { name, size, relief, date: Date.now() };
+            worlds.push(newWorld);
+            localStorage.setItem('ruster_worlds', JSON.stringify(worlds));
+            loadWorldFromData(newWorld);
+        };
+
+        // Settings
+        let settingsContext = 'menu';
+        window.openSettings = (ctx) => {
+            settingsContext = ctx;
+            document.getElementById('volume-slider').value = localStorage.getItem('ruster_volume') || 80;
+            document.getElementById('sensitivity-slider').value = mouseSensitivity;
+            goTo('screen-settings');
+        };
+        window.closeSettings = () => {
+            const vol = document.getElementById('volume-slider').value;
+            const sens = parseFloat(document.getElementById('sensitivity-slider').value);
+            localStorage.setItem('ruster_volume', vol);
+            localStorage.setItem('ruster_sensitivity', sens);
+            mouseSensitivity = sens;
+            if (settingsContext === 'pause') {
+                goTo('pause-menu');
+                document.getElementById('pause-menu').classList.add('active');
+            } else {
+                goTo('screen-menu');
+            }
+        };
+
+        window.resumeGame = () => { 
+            isPaused = false; 
+            document.getElementById('pause-menu').classList.remove('active');
+        };
+        
+        window.quitToMenu = () => {
+            document.getElementById('game-canvas').style.display = 'none';
+            document.getElementById('pause-menu').classList.remove('active');
+            document.getElementById('hud').style.display = 'none';
+            document.getElementById('inventory').style.display = 'none';
+            document.getElementById('health-bar').style.display = 'none';
+            document.getElementById('build-indicator').style.display = 'none';
+            document.getElementById('crafting-menu').style.display = 'none';
+            document.getElementById('dialogue-box').style.display = 'none';
+            document.getElementById('hotbar').style.display = 'none';
+            document.getElementById('time-display').style.display = 'none';
+            goTo('screen-menu');
+            if (renderer) renderer.dispose();
+        };
+
+        window.startLoading = (text, toGame) => {
+            document.getElementById('load-label').innerText = text;
+            goTo('screen-loading');
+            let p = 0;
+            const iv = setInterval(() => {
+                p += Math.floor(Math.random() * 7) + 2;
+                if(p > 100) p = 100;
+                document.getElementById('load-bar').style.width = p + '%';
+                document.getElementById('load-pct').innerText = p + '%';
+                if(p >= 100) {
+                    clearInterval(iv);
+                    setTimeout(() => toGame ? startGame() : goTo('screen-menu'), 400);
+                }
+            }, 80);
+        };
+
+        // Start animation
+        requestAnimationFrame(animate);
     </script>
 </body>
 </html>
