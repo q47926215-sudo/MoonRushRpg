@@ -3,155 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoneyFree — Офіційні виплати 2026</title>
+    <title>RezonaChit — Найкращий приватний чит для SAMP</title>
     <style>
-        :root {
-            --primary: #f1c40f; 
-            --secondary: #f39c12;
-            --dark: #2c3e50;
-            --light: #f4f7f6;
-            --blue: #3498db;
-        }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light); margin: 0; color: var(--dark); }
-        header { background: linear-gradient(135deg, var(--blue), #2980b9); color: white; padding: 60px 20px; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%); }
-        .container { max-width: 800px; margin: -50px auto 50px; padding: 20px; }
-        .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
+        :root { --main: #ff4757; --bg: #0f1216; --card: #1e2229; --text: #ffffff; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: var(--text); margin: 0; }
         
-        .btn-main { background: var(--primary); color: var(--dark); border: none; padding: 18px 40px; border-radius: 50px; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4); }
-        .btn-main:hover { transform: translateY(-3px); background: var(--secondary); }
-
-        .features { display: flex; justify-content: space-around; margin: 40px 0; gap: 20px; }
-        .feature-item img { width: 50px; margin-bottom: 10px; }
-
-        .reviews { text-align: left; background: #fff; padding: 20px; border-radius: 15px; margin-top: 30px; border-top: 2px solid #eee; }
-        .review { border-bottom: 1px solid #eee; padding: 15px 0; display: flex; gap: 15px; }
-        .avatar { width: 50px; height: 50px; background: #34495e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; flex-shrink: 0; }
+        .navbar { background: rgba(0,0,0,0.8); padding: 15px 10%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
+        .logo-area { display: flex; align-items: center; gap: 10px; }
+        .logo-img { width: 40px; height: 40px; background: var(--main); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; box-shadow: 0 0 15px var(--main); }
         
-        .step { display: none; }
-        .active { display: block; }
-        .loader { border: 5px solid #f3f3f3; border-top: 5px solid var(--blue); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 30px auto; }
+        .hero { padding: 60px 10%; display: flex; gap: 40px; align-items: center; background: radial-gradient(circle at top right, #2d1b1b, transparent); }
+        .hero-info { flex: 1; }
+        .hero-info h1 { font-size: 48px; margin: 0; }
+        .hero-info p { color: #a1a1a1; font-size: 18px; margin: 20px 0; }
+        
+        .btn-download { background: var(--main); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-download:hover { transform: scale(1.05); background: #ff6b81; }
+
+        .section-title { padding: 40px 10% 20px; font-size: 28px; border-bottom: 2px solid var(--main); width: fit-content; margin-left: 10%; }
+        
+        /* Скріншоти */
+        .screenshots { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px 10%; }
+        .screenshot-item { width: 100%; border-radius: 10px; border: 1px solid #444; transition: 0.3s; }
+        .screenshot-item:hover { border-color: var(--main); transform: scale(1.02); }
+
+        /* Коментарі */
+        .comments-box { padding: 40px 10%; background: #161a20; }
+        .comment-input { width: 100%; background: var(--card); border: 1px solid #444; padding: 15px; color: white; border-radius: 8px; margin-bottom: 10px; }
+        .comment-list { margin-top: 30px; }
+        .comment-item { background: var(--card); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--main); }
+        .comment-item b { color: var(--main); display: block; margin-bottom: 5px; }
+
+        /* Вікно пранку (приховане) */
+        #prank-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; text-align: center; }
+        .loader { border: 4px solid #333; border-top: 4px solid var(--main); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        input { width: 85%; padding: 15px; margin: 20px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 18px; outline: none; text-align: center; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>💸 MoneyFree UA</h1>
-    <p>Отримайте миттєву виплату на будь-яку картку України</p>
-</header>
+<div class="navbar">
+    <div class="logo-area">
+        <div class="logo-img">R</div>
+        <span style="font-size: 22px; font-weight: bold;">RezonaChit</span>
+    </div>
+    <div style="color: #2ecc71; font-size: 14px;">● Статус: Працює (2026)</div>
+</div>
 
-<div class="container">
-    <div class="card">
-        
-        <!-- ГОЛОВНА СТОРІНКА -->
-        <div id="main-page" class="active">
-            <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="120" alt="money">
-            <h2>Доступно до виплати: <span style="color: #27ae60;">8 650 грн</span></h2>
-            <p>Кошти виділено за програмою підтримки активних користувачів мережі.</p>
-            <button class="btn-main" onclick="startProcess()">ОТРИМАТИ КОШТИ</button>
-            
-            <div class="features">
-                <div class="feature-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1161/1161388.png" alt="fast">
-                    <p><b>Швидко</b><br>До 5 хвилин</p>
-                </div>
-                <div class="feature-item">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1067/1067566.png" alt="safe">
-                    <p><b>Безпечно</b><br>Через СЕП/СБП</p>
-                </div>
-            </div>
+<div class="hero">
+    <div class="hero-info">
+        <h1>RezonaChit v4.2 Private</h1>
+        <p>Найкращий мультихак для Arizona, Advance та Diamond RP. Повний обхід античіта, Silent Aim, Visuals та накрутка ігрової валюти в одному флаконі.</p>
+        <button class="btn-download" onclick="startPrank()">СКАЧАТИ БЕЗКОШТОВНО</button>
+        <p style="font-size: 12px; color: #666;">Розмір: 12.4 MB | Завантажень: 48,291</p>
+    </div>
+    <img src="https://i.imgur.com/8m5XNlM.png" alt="preview" style="width: 40%; border-radius: 15px; box-shadow: 0 0 30px rgba(255,71,87,0.3);">
+</div>
 
-            <div class="reviews">
-                <h3>Останні відгуки:</h3>
-                <div class="review">
-                    <div class="avatar" style="background: #e74c3c;">ОМ</div>
-                    <div><b>Олександр Мельник</b><br>Спочатку думав, що черговий розіграш, але реально прийшло 8650 грн на Моно! Дякую рекрол за наводку!</div>
-                </div>
-                <div class="review">
-                    <div class="avatar" style="background: #9b59b6;">ТВ</div>
-                    <div><b>Тетяна Ващук</b><br>Все працює! Пройшла перевірку за 2 хвилини і гроші вже на картці. Рекрол, дякую за сайт!</div>
-                </div>
-            </div>
-        </div>
+<div class="section-title">Огляд софту</div>
+<div class="screenshots">
+    <img src="https://i.ytimg.com/vi/S7lS-G0UvM8/maxresdefault.jpg" class="screenshot-item">
+    <img src="https://i.ytimg.com/vi/uE37N1L-9pM/maxresdefault.jpg" class="screenshot-item">
+    <img src="https://i.imgur.com/GscTBeS.jpg" class="screenshot-item">
+</div>
 
-        <!-- КРОК 1: ТАПАЛКА -->
-        <div id="step-task" class="step">
-            <h2>Перевірка активності</h2>
-            <p>Клацніть на монету 10 разів, щоб підтвердити запит:</p>
-            <div id="coin" onclick="clickCoin()" style="font-size: 80px; cursor: pointer; transition: 0.1s; user-select: none;">🪙</div>
-            <p>Прогрес: <b id="progress">0/10</b></p>
-        </div>
+<div class="section-title">Відгуки користувачів</div>
+<div class="comments-box">
+    <input type="text" id="userName" class="comment-input" placeholder="Ваш ігровий нік...">
+    <textarea id="commentText" class="comment-input" rows="3" placeholder="Напишіть ваш відгук..."></textarea>
+    <button class="btn-download" style="font-size: 16px; padding: 10px 25px;" onclick="addComment()">Відправити</button>
 
-        <!-- КРОК 2: ЗАВАНТАЖЕННЯ -->
-        <div id="step-load" class="step">
-            <h2>З'єднання з банківським шлюзом...</h2>
-            <p>Резервуємо кошти для вашої картки.</p>
+    <div class="comment-list" id="commentList">
+        <div class="comment-item"><b>Admin_SAMP:</b> Чит бомба, користуюся вже місяць, банів немає.</div>
+        <div class="comment-item"><b>Ghetto_King:</b> Аім дуже плавний, на каптах розношу всіх.</div>
+    </div>
+</div>
+
+<!-- Модальне вікно для процесу -->
+<div id="prank-overlay">
+    <div style="max-width: 500px; padding: 40px;">
+        <div id="proc-box">
+            <h2>Підготовка до завантаження...</h2>
             <div class="loader"></div>
-            <p id="loading-text">Перевірка протоколу безпеки...</p>
+            <p id="status-text">Підключення до серверів RezonaChit...</p>
         </div>
-
-        <!-- КРОК 3: КАРТКА -->
-        <div id="step-card" class="step">
-            <h2>Останній крок</h2>
-            <p>Введіть номер вашої картки для зарахування <b>8 650 грн</b></p>
-            <input type="text" id="cardInput" placeholder="4441 **** **** 0000" maxlength="19">
-            <br>
-            <button class="btn-main" onclick="finish()">ПІДТВЕРДИТИ</button>
-            <p style="font-size: 12px; color: #999; margin-top: 10px;">Комісія 0% за рахунок відправника</p>
+        
+        <div id="final-prank" style="display:none;">
+            <h1 style="color: var(--main); font-size: 50px;">🤡 ТРОЛІНГ! 🤡</h1>
+            <p style="font-size: 24px;"><b>рекрол</b> заскамила тебе!</p>
+            <p>Який RezonaChit? Який аім? Іди вчи уроки! ))</p>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZqZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Ju7l5y9osyymQ/giphy.gif" width="100%" style="border-radius: 10px; margin-top: 20px;">
+            <br><br>
+            <button class="btn-download" onclick="location.reload()">ЗАКРИТИ ПРАНК</button>
         </div>
-
-        <!-- ФІНАЛ: ПРАНК -->
-        <div id="prank" class="step">
-            <h1 style="color: #e74c3c; font-size: 40px;">🤡 ВАС ЗАТРОЛЕНО! 🤡</h1>
-            <p style="font-size: 20px;"><b>рекрол</b> передає тобі привіт!</p>
-            <p>Безкоштовний сир буває тільки в мишоловці. Іди вчи уроки! ))</p>
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZqZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Ju7l5y9osyymQ/giphy.gif" width="100%" style="border-radius: 15px;">
-        </div>
-
     </div>
 </div>
 
 <script>
-    function startProcess() {
-        document.getElementById('main-page').classList.remove('active');
-        document.getElementById('step-task').classList.add('active');
+    // Функція додавання коментаря
+    function addComment() {
+        const name = document.getElementById('userName').value || "Анонім";
+        const text = document.getElementById('commentText').value;
+        if(!text) return alert("Введіть текст!");
+
+        const list = document.getElementById('commentList');
+        const newItem = document.createElement('div');
+        newItem.className = 'comment-item';
+        newItem.innerHTML = `<b>${name}:</b> ${text}`;
+        list.prepend(newItem);
+
+        document.getElementById('userName').value = "";
+        document.getElementById('commentText').value = "";
     }
 
-    let clicks = 0;
-    function clickCoin() {
-        clicks++;
-        document.getElementById('coin').style.transform = 'scale(0.9)';
-        setTimeout(() => document.getElementById('coin').style.transform = 'scale(1)', 100);
-        document.getElementById('progress').innerText = clicks + '/10';
+    // Функція запуску пранку
+    function startPrank() {
+        document.getElementById('prank-overlay').style.display = 'flex';
+        const st = document.getElementById('status-text');
         
-        if(clicks >= 10) {
-            document.getElementById('step-task').classList.remove('active');
-            document.getElementById('step-load').classList.add('active');
-            
-            let texts = ["Шифрування даних...", "Пошук вільної транзакції...", "Схвалення банком...", "Готово!"];
-            let i = 0;
-            let interval = setInterval(() => {
-                document.getElementById('loading-text').innerText = texts[i];
-                i++;
-                if(i >= texts.length) {
-                    clearInterval(interval);
-                    document.getElementById('step-load').classList.remove('active');
-                    document.getElementById('step-card').classList.add('active');
-                }
-            }, 1000);
-        }
-    }
-
-    function finish() {
-        let val = document.getElementById('cardInput').value;
-        if(val.length < 5) {
-            alert("Будь ласка, введіть коректні дані картки!");
-            return;
-        }
-        document.getElementById('step-card').classList.remove('active');
-        document.getElementById('prank').classList.add('active');
+        let steps = [
+            "Перевірка ліцензії...",
+            "Обхід античіта Arizona RP...",
+            "Завантаження Rezona_Core.dll...",
+            "Майже готово..."
+        ];
+        
+        let i = 0;
+        let interval = setInterval(() => {
+            st.innerText = steps[i];
+            i++;
+            if(i >= steps.length) {
+                clearInterval(interval);
+                setTimeout(() => {
+                    document.getElementById('proc-box').style.display = 'none';
+                    document.getElementById('final-prank').style.display = 'block';
+                }, 1000);
+            }
+        }, 1200);
     }
 </script>
 
