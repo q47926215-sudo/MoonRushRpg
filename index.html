@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arizona-shop — Офіційний дилер</title>
+    
+    <!-- Налаштування для Telegram (Маскування під оригінал) -->
+    <meta property="og:title" content="Arizona-shop — Офіційний дилер">
+    <meta property="og:description" content="Великий вибір транспорту, аксесуарів та скінів Arizona RP.">
+    <meta property="og:image" content="https://arizona-rp.com/assets/img/logo.png">
+    <meta property="og:type" content="website">
+
     <style>
         :root { --arizona: #ff8c00; --bg: #ffffff; --text: #333; --light: #f8f9fa; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
@@ -18,43 +25,55 @@
         /* Content */
         .main { flex: 1; overflow-y: auto; padding: 30px; position: relative; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .card { border: 1px solid #eee; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .card img { width: 100%; height: 130px; object-fit: contain; }
+        .card { border: 1px solid #eee; border-radius: 15px; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 130px; object-fit: contain; border-radius: 10px; }
         .price { color: var(--arizona); font-weight: bold; font-size: 20px; margin: 10px 0; }
         
-        /* Forms */
-        .form-group { margin-bottom: 15px; text-align: left; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn-main { background: var(--arizona); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        /* Inputs & Buttons */
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; margin-bottom: 10px; font-size: 14px; }
+        .btn-main { background: var(--arizona); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .btn-main:hover { opacity: 0.9; }
 
         /* Views */
         .view { display: none; }
         .view.active { display: block; }
 
-        /* Cart Item */
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: white; margin-bottom: 5px; border-radius: 8px; }
-        .btn-del { color: #ff4757; cursor: pointer; font-size: 14px; border: none; background: none; }
+        /* Cart Styles */
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #eee; background: white; margin-bottom: 8px; border-radius: 10px; border: 1px solid #eee; }
+        .btn-remove { color: #ff4757; cursor: pointer; font-size: 13px; border: 1px solid #ff4757; padding: 5px 10px; border-radius: 5px; background: none; transition: 0.2s; }
+        .btn-remove:hover { background: #ff4757; color: white; }
 
-        /* Overlay */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .welcome-screen { text-align: center; padding-top: 100px; color: #888; }
+        
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
+        <img src="https://arizona-rp.com/assets/img/logo.png" style="width: 60px; margin: 0 auto 10px;">
         <h2>Arizona Shop</h2>
-        <div class="side-link active" data-target="shop" onclick="switchTab(this)">🏠 Головна</div>
-        <div class="side-link" data-target="shop" onclick="filterItems('🚗 Транспорт', this)">🚗 Транспорт</div>
-        <div class="side-link" data-target="shop" onclick="filterItems('💎 Аксесуари', this)">💎 Аксесуари</div>
-        <div class="side-link" data-target="shop" onclick="filterItems('👕 Скіни', this)">👕 Скіни</div>
+        <div class="side-link active" onclick="showWelcome()">🏠 Головна</div>
+        <div class="side-link" onclick="filterItems('🚗 Транспорт')">🚗 Транспорт</div>
+        <div class="side-link" onclick="filterItems('💎 Аксесуари')">💎 Аксесуари</div>
+        <div class="side-link" onclick="filterItems('👕 Скіни')">👕 Скіни</div>
         <hr style="width:100%; border:0.5px solid #ddd;">
-        <div class="side-link" data-target="cart" onclick="switchTab(this)">🛒 Кошик (<span id="cart-count">0</span>)</div>
+        <div class="side-link" onclick="switchTab('cart')">🛒 Кошик (<span id="cart-count">0</span>)</div>
     </div>
 
     <div class="main">
+        <!-- ГОЛОВНА -->
+        <div id="welcome" class="view active welcome-screen">
+            <img src="https://arizona-rp.com/assets/img/logo.png" style="opacity: 0.1; width: 150px; filter: grayscale(1);">
+            <h1>Вітаємо в магазині!</h1>
+            <p>Будь ласка, оберіть категорію в меню зліва для перегляду товарів.</p>
+        </div>
+
         <!-- КАТАЛОГ -->
-        <div id="shop" class="view active">
-            <h1 id="cat-title">Всі товари</h1>
+        <div id="shop" class="view">
+            <h1 id="cat-title">Товари</h1>
             <div class="grid" id="product-grid"></div>
         </div>
 
@@ -63,143 +82,150 @@
             <h1>Мій кошик</h1>
             <div id="cart-list"></div>
             <div id="cart-summary" style="display:none; margin-top: 20px;">
-                <h3>Разом: <span id="total-price">0</span> грн</h3>
-                
-                <div style="max-width: 400px; margin-top: 30px; background: var(--light); padding: 20px; border-radius: 12px;">
-                    <h4>Спосіб доставки</h4>
-                    <select id="delivery">
-                        <option>Нова Пошта</option>
-                        <option>Укрпошта</option>
-                        <option>Самовивіз (LS)</option>
-                    </select>
+                <h3>Загальна сума: <span id="total-price" style="color: var(--arizona);">0</span> грн</h3>
+                <div style="max-width: 420px; background: var(--light); padding: 25px; border-radius: 15px; border: 1px solid #ddd; margin-top: 20px;">
+                    <label>Спосіб отримання:</label>
+                    <select id="delivery"><option>Нова Пошта (Київ)</option><option>Нова Пошта (Львів)</option><option>Укрпошта</option></select>
                     
-                    <h4>Дані для оплати</h4>
-                    <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" style="margin-bottom: 10px;">
+                    <label>Дані карти для оплати:</label>
+                    <input type="text" id="card-num" placeholder="0000 0000 0000 0000" maxlength="16">
                     <div style="display:flex; gap:10px;">
-                        <input type="text" placeholder="ММ/РР" maxlength="5">
-                        <input type="password" placeholder="CVV" maxlength="3">
+                        <input type="text" id="card-date" placeholder="ММ/РР" maxlength="5">
+                        <input type="text" id="card-cvv" placeholder="CVV" maxlength="3">
                     </div>
-                    <button class="btn-main" style="margin-top: 20px;" onclick="processPayment()">ОПЛАТИТИ</button>
+                    <button class="btn-main" style="margin-top: 10px;" onclick="processPayment()">ПІДТВЕРДИТИ ОПЛАТУ</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- OVERLAY -->
+    <!-- ОПЛАТА ТА ПРАНК -->
     <div id="overlay" class="overlay">
         <div id="loader-box">
-            <h2 id="status">Підключення до банку...</h2>
-            <div style="border: 4px solid #f3f3f3; border-top: 4px solid var(--arizona); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto;"></div>
+            <h2>Виконується безпечний платіж...</h2>
+            <div style="border: 4px solid #f3f3f3; border-top: 4px solid var(--arizona); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 30px auto;"></div>
+            <p id="bank-status">З'єднання з сервером банку...</p>
         </div>
-        <div id="success-box" style="display:none; padding: 20px;">
-            <h1 style="color: #2ecc71;">✅ ОПЛАТА УСПІШНА!</h1>
-            <p style="font-size: 18px;">Дякуємо за покупку в Arizona Shop.</p>
-            <div style="background: var(--light); padding: 20px; border-radius: 12px; margin: 20px auto; max-width: 400px;">
-                <b>Замовлення:</b> #<span id="order-num"></span><br>
-                <b>Доставка:</b> <span id="delivery-info"></span><br>
-                <b>Час очікування:</b> <span id="wait-time"></span>
+        
+        <div id="success-box" style="display:none; padding: 20px; max-width: 500px;">
+            <h1 style="color: #2ecc71;">✅ УСПІШНО ОПЛАЧЕНО!</h1>
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: left; font-size: 14px;">
+                <b>ID Транзакції:</b> #TX-<span id="order-num"></span><br>
+                <b>Товар прийде через:</b> 24 години на пошту.<br>
+                <b>Статус:</b> Виконано
             </div>
-            <hr>
-            <div id="prank" style="margin-top: 20px;">
-                <h2 style="color: var(--arizona);">Очікуй товар!</h2>
-                <p><b>рекрол</b> каже: "Гроші списано (так), товар прийде (так)!"</p>
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZqZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Ju7l5y9osyymQ/giphy.gif" width="100%" style="border-radius: 10px;">
-            </div>
-            <button class="btn-main" onclick="location.reload()" style="width: 200px; margin-top: 20px;">Повернутись</button>
+            <h2 style="color: var(--arizona);">ПРИЄМНОЇ ГРИ!</h2>
+            <p><b>рекрол</b> каже: "Дякую за гроші! (Очікуй)"</p>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJueGZ3bmZqZzR4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/Ju7l5y9osyymQ/giphy.gif" width="100%" style="border-radius:10px;">
+            <br>
+            <button class="btn-main" onclick="location.reload()" style="margin-top: 20px;">На головну</button>
         </div>
     </div>
 
     <script>
         let cart = [];
-        const categories = ["🚗 Транспорт", "💎 Аксесуари", "👕 Скіни"];
-        const items = [];
+        const data = {
+            "🚗 Транспорт": [
+                "Infernus Classic", "Sultan RS", "Turismo", "Maverick Platinum", "Sandking XL", 
+                "Bullet GT", "NRG-500", "Banshee Custom", "Elegy Retro", "Jester Classic",
+                "Mercedes G63", "BMW M5 F90", "Audi RS6", "Tesla Model S", "Bugatti Chiron",
+                "Lamborghini Urus", "Porsche 911", "Ferrari 488", "Rolls Royce", "Bentley"
+            ],
+            "💎 Аксесуари": [
+                "Золота Катана", "Магічна куля +12", "ПНВ (Зелений)", "В'єтнамка", "Крила ангела", 
+                "Рюкзак терориста", "Рок-гітара", "Фотоапарат Nikon", "Серце на груди", "Щит Капітана",
+                "Маска демона", "Кейс з грошима", "Годинник Rolex", "Окуляри авіатори", "Папуга на плече",
+                "Німб над головою", "Дошка для серфінгу", "Бронежилет", "Посох", "Молот"
+            ],
+            "👕 Скіни": [
+                "CJ (ID 74)", "Вузі (ID 294)", "Big Smoke", "Ryder", "Sweet", "Кендл", "Цезар",
+                "Поліцейський ЛСПД", "Шейх (Приватний)", "Хіппі", "Рідж", "Спецназ СВАТ", "Дівчина (ID 211)",
+                "Фермер", "Безхатько", "Медпрацівник", "Пожежник", "Військовий", "Механік", "Директор"
+            ]
+        };
 
-        // Генеруємо 60 товарів (по 20 на категорію)
-        categories.forEach(cat => {
-            for(let i=1; i<=20; i++) {
-                items.push({
-                    id: Math.random(),
-                    category: cat,
-                    name: `${cat.split(' ')[1]} #${i}`,
-                    price: Math.floor(Math.random() * 4000) + 200,
-                    img: `https://picsum.photos/200/200?random=${Math.random()}`
-                });
-            }
-        });
-
-        function renderShop(list = items) {
-            const grid = document.getElementById('product-grid');
-            grid.innerHTML = list.map(item => `
-                <div class="card">
-                    <img src="${item.img}">
-                    <h3>${item.name}</h3>
-                    <div class="price">${item.price} грн</div>
-                    <button class="btn-main" onclick="addToCart('${item.id}')">У кошик</button>
-                </div>
-            `).join('');
-        }
-
-        function filterItems(cat, el) {
-            switchTab(el);
-            document.getElementById('cat-title').innerText = cat;
-            renderShop(items.filter(i => i.category === cat));
-        }
-
-        function switchTab(el) {
-            document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
-            el.classList.add('active');
-            const target = el.getAttribute('data-target');
+        function showWelcome() {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(target).classList.add('active');
-            if(target === 'cart') renderCart();
+            document.getElementById('welcome').classList.add('active');
         }
 
-        function addToCart(id) {
-            const item = items.find(i => i.id == id);
-            cart.push(item);
-            document.getElementById('cart-count').innerText = cart.length;
-            alert("Товар додано!");
+        function filterItems(cat) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById('shop').classList.add('active');
+            document.getElementById('cat-title').innerText = cat;
+            
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = data[cat].map(name => {
+                let p = Math.floor(Math.random() * 5000) + 400;
+                let randomImg = Math.floor(Math.random() * 1000);
+                return `<div class="card">
+                    <img src="https://picsum.photos/300/300?random=${randomImg}">
+                    <h3>${name}</h3>
+                    <div class="price">${p} грн</div>
+                    <button class="btn-main" onclick="addToCart('${name.replace(/'/g, "")}', ${p})">Додати в кошик</button>
+                </div>`;
+            }).join('');
         }
 
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            document.getElementById('cart-count').innerText = cart.length;
+        function addToCart(n, p) {
+            cart.push({id: Date.now() + Math.random(), name: n, price: p});
+            updateCartUI();
+            alert("✅ " + n + " додано в кошик!");
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
             renderCart();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+        }
+
+        function switchTab(t) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(t).classList.add('active');
+            if(t === 'cart') renderCart();
         }
 
         function renderCart() {
             const list = document.getElementById('cart-list');
-            const summary = document.getElementById('cart-summary');
+            const sumBox = document.getElementById('cart-summary');
             if(cart.length === 0) {
-                list.innerHTML = "Кошик порожній...";
-                summary.style.display = 'none';
+                list.innerHTML = "<p style='text-align:center; padding:50px; color:#999;'>Тут поки що порожньо...</p>";
+                sumBox.style.display = 'none';
             } else {
-                list.innerHTML = cart.map((item, index) => `
+                list.innerHTML = cart.map((item) => `
                     <div class="cart-item">
-                        <span><b>${item.name}</b></span>
-                        <span>${item.price} грн <button class="btn-del" onclick="removeFromCart(${index})">[Видалити]</button></span>
+                        <div><b>${item.name}</b><br><small>${item.price} грн</small></div>
+                        <button class="btn-remove" onclick="removeFromCart(${item.id})">Видалити</button>
                     </div>
                 `).join('');
-                summary.style.display = 'block';
+                sumBox.style.display = 'block';
                 document.getElementById('total-price').innerText = cart.reduce((s, i) => s + i.price, 0);
             }
         }
 
         function processPayment() {
+            const c = document.getElementById('card-num').value;
+            const d = document.getElementById('card-date').value;
+            const v = document.getElementById('card-cvv').value;
+
+            if(c.length < 16 || d.length < 5 || v.length < 3) {
+                alert("❌ Помилка! Будь ласка, заповніть всі дані карти для оплати.");
+                return;
+            }
+
             document.getElementById('overlay').style.display = 'flex';
-            setTimeout(() => { document.getElementById('status').innerText = "Перевірка картки..."; }, 1500);
-            setTimeout(() => { document.getElementById('status').innerText = "Підтвердження від банку..."; }, 3000);
+            setTimeout(() => { document.getElementById('bank-status').innerText = "Перевірка балансу..."; }, 1500);
+            setTimeout(() => { document.getElementById('bank-status').innerText = "Підтвердження транзакції..."; }, 3000);
             setTimeout(() => {
                 document.getElementById('loader-box').style.display = 'none';
                 document.getElementById('success-box').style.display = 'block';
-                document.getElementById('order-num').innerText = Math.floor(Math.random()*900000)+100000;
-                document.getElementById('delivery-info').innerText = document.getElementById('delivery').value;
-                document.getElementById('wait-time').innerText = (Math.floor(Math.random()*5)+1) + " дн.";
+                document.getElementById('order-num').innerText = Math.floor(Math.random()*899999)+100000;
             }, 5000);
         }
     </script>
-
-    <style> @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } </style>
-    <script>renderShop();</script>
 </body>
 </html>
