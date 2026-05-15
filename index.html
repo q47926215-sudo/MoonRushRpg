@@ -25,8 +25,12 @@
             text-align: center;
             padding: 10px;
             font-size: 12px;
-            margin: 15px 0;
+            margin: 20px 0;
             border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* НАВІГАЦІЯ */
@@ -105,7 +109,13 @@
 </nav>
 
 <div class="container">
-    <div class="ad-slot">📢 ТУТ БУДЕ ВАША РЕКЛАМА (A-ADS / ADSENSE)</div>
+
+    <!-- ===== РЕКЛАМА 1 (після навігації) ===== -->
+    <div class="ad-slot">
+        <!-- ВСТАВ СЮДИ КОД ВІД A-ADS -->
+        <!-- Приклад: -->
+        <!-- <script src="https://aads.com/твій_код.js" async></script> -->
+    </div>
 
     <div id="landing" class="page active">
         <section class="hero">
@@ -113,10 +123,16 @@
             <p style="color: #94a3b8; font-size: 1.2rem; margin-bottom: 40px;">ІІ-генератор сценаріїв та ідей для TikTok, Reels та Shorts.</p>
             <button class="btn btn-primary" onclick="showPage('pricing')">Спробувати безкоштовно</button>
         </section>
+
+        <!-- ===== РЕКЛАМА 2 (після hero) ===== -->
+        <div class="ad-slot">
+            <!-- ВСТАВ СЮДИ ДРУГИЙ КОД ВІД A-ADS -->
+        </div>
     </div>
 
     <div id="pricing" class="page">
         <div class="pricing-grid">
+            <!-- ... твої карти тарифів ... -->
             <div class="card">
                 <h3>Free</h3>
                 <div class="price">0 ₴</div>
@@ -149,6 +165,11 @@
                 <button class="btn btn-primary" onclick="setPlan('plus')">Купити Plus</button>
             </div>
         </div>
+
+        <!-- ===== РЕКЛАМА 3 (в тарифах) ===== -->
+        <div class="ad-slot">
+            <!-- ВСТАВ СЮДИ ТРЕТІЙ КОД -->
+        </div>
     </div>
 
     <div id="dashboard" class="page">
@@ -170,7 +191,11 @@
         </div>
     </div>
 
-    <div class="ad-slot">📢 ТУТ ТАКОЖ МОЖЕ БУТИ РЕКЛАМА</div>
+    <!-- ===== РЕКЛАМА 4 (внизу сторінки) ===== -->
+    <div class="ad-slot">
+        <!-- ВСТАВ СЮДИ ЧЕТВЕРТИЙ КОД -->
+    </div>
+
 </div>
 
 <script>
@@ -209,10 +234,8 @@
             if (currentPlan === 'free') {
                 box.innerText = `💡 ІДЕЯ: Зробіть відео про ${topic}, використовуючи перехід "Jump Cut". \n\n(Це безкоштовна версія. Купіть Premium для повного сценарію)`;
             } else {
-                let script = `🎬 СЦЕНАРІЙ: ${topic}\n\n[00-05с] Хук: "Ви не повірите, але ${topic} працює саме так!"\n[05-30с] Основна частина: Покажіть 3 кроки реалізації ${topic}.\n[30-45с] Заклик: "Підпишись, якщо було корисно!"\n\n🔥 Хештеги: #рек #${topic.replace(/\s/g, '')} #тренди`;
+                let script = `🎬 СЦЕНАРІЙ: ${topic}\n\n[00-05с] Хук: "Ви не повірите, але ${topic} працює саме так!"\n[05-30с] Основна частина: Покажіть 3 кроки реалізації \( {topic}.\n[30-45с] Заклик: "Підпишись, якщо було корисно!"\n\n🔥 Хештеги: #рек # \){topic.replace(/\s/g, '')} #тренди`;
                 box.innerText = script;
-                
-                // Якщо це не PLUS, можна додати обмеження або просто показати все (як ти захочеш)
             }
         }, 1500);
     }
@@ -230,4 +253,3 @@
 
 </body>
 </html>
-
