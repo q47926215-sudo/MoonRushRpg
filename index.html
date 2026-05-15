@@ -1,154 +1,233 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoonRushGame | Официальный сайт</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ContentGenAi — Твій AI-помічник</title>
     <style>
-        /* Весь CSS теперь здесь */
-        :root {
-            --main-bg: #0b161d;
-            --card-bg: #111e27;
-            --btn-blue: #00a1ff;
-            --accent: #00d4ff;
-            --text-gray: #8ea1ad;
-        }
-
+        /* ОСНОВНІ СТИЛІ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--main-bg); color: #fff; line-height: 1.6; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #0b0e14;
+            color: #e2e8f0;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* РЕКЛАМНІ БЛОКИ */
+        .ad-slot {
+            background: #161b22;
+            border: 1px dashed #a855f7;
+            color: #a855f7;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        /* НАВІГАЦІЯ */
+        .navbar {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            background: rgba(11, 14, 20, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: 800; cursor: pointer; color: #fff; text-decoration: none; }
+        .logo span { color: #a855f7; }
+        .nav-links button {
+            background: none; border: none; color: #cbd5e1; margin-left: 20px; cursor: pointer; font-weight: 500;
+        }
+        .nav-links button:hover { color: #a855f7; }
+
+        /* ГЕЙТВЕЙ (ЛЕНДИНГ) */
+        .page { display: none; animation: fadeIn 0.4s ease-out; }
+        .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hero { text-align: center; padding: 80px 0; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 20px; font-weight: 800; }
+        .gradient-text { background: linear-gradient(90deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        header { background: #0d1b26; padding: 15px 0; border-bottom: 1px solid #1c2e3a; position: sticky; top: 0; z-index: 100; }
-        .logo { font-weight: bold; font-size: 24px; }
-        .logo span { color: var(--accent); }
+        /* КНОПКИ */
+        .btn { padding: 12px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
+        .btn-primary { background: #a855f7; color: #fff; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4); }
+        .btn-primary:hover { background: #9333ea; transform: scale(1.05); }
 
-        .main-layout { display: grid; grid-template-columns: 1fr 300px; gap: 40px; padding: 30px 0; }
+        /* ТАРИФИ */
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 40px 0; }
+        .card { background: #161b22; padding: 40px; border-radius: 24px; border: 1px solid #30363d; text-align: center; transition: 0.3s; }
+        .card:hover { border-color: #a855f7; transform: translateY(-10px); }
+        .card.popular { border: 2px solid #a855f7; position: relative; }
+        .card h3 { font-size: 1.8rem; margin-bottom: 10px; }
+        .price { font-size: 2.5rem; font-weight: 800; color: #a855f7; margin-bottom: 20px; }
+        .features { list-style: none; margin-bottom: 30px; color: #94a3b8; text-align: left; }
+        .features li { margin-bottom: 10px; }
+        .features li::before { content: "✓ "; color: #a855f7; }
 
-        .game-info h1 { font-size: 40px; margin-bottom: 5px; }
-        .dev-name span { color: var(--accent); font-weight: bold; }
-        .stats { color: var(--text-gray); font-size: 14px; }
-
-        .btn-download { 
-            display: block; 
-            background: var(--btn-blue); 
-            color: #fff; 
-            text-decoration: none; 
-            padding: 25px; 
-            border-radius: 15px; 
-            margin: 30px 0; 
-            transition: 0.3s;
+        /* КАБІНЕТ */
+        .dashboard { max-width: 800px; margin: 40px auto; background: #161b22; padding: 30px; border-radius: 20px; }
+        .input-group { margin-bottom: 25px; }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #30363d; background: #0b0e14; color: #fff; font-size: 1rem; }
+        .result-box { 
+            background: #0b0e14; padding: 20px; border-radius: 12px; min-height: 150px; border: 1px solid #30363d; 
+            white-space: pre-wrap; margin-top: 20px; position: relative;
         }
-        .btn-download:hover { transform: translateY(-3px); background: #008be0; }
-        .dl-text { font-size: 22px; font-weight: bold; }
-        .dl-version { font-size: 13px; opacity: 0.8; }
-
-        .screenshots-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 20px 0 40px 0;
-        }
-        .screenshots-grid img {
-            width: 100%;
-            border-radius: 12px;
-            border: 2px solid #1c2e3a;
+        .blur { filter: blur(5px); user-select: none; }
+        .lock-overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); border-radius: 12px;
         }
 
-        .comments-section { background: var(--card-bg); padding: 30px; border-radius: 15px; }
-        .comment { background: #1c2e3a; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--accent); }
-        .comment-form { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        .comment-form input, .comment-form textarea { background: #0b161d; border: 1px solid #1c2e3a; color: #fff; padding: 12px; border-radius: 8px; }
-        .comment-form button { background: var(--accent); border: none; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 8px; color: #0b161d; }
-
-        .sidebar h3 { font-size: 18px; margin-bottom: 20px; color: var(--text-gray); }
-        .side-card { display: flex; gap: 15px; background: var(--card-bg); padding: 15px; border-radius: 10px; margin-bottom: 15px; align-items: center; }
-        .side-img { width: 45px; height: 45px; background: #1c2e3a; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-
-        footer { text-align: center; padding: 50px 0; color: #444; border-top: 1px solid #1c2e3a; margin-top: 40px; }
-
-        @media (max-width: 800px) {
-            .main-layout { grid-template-columns: 1fr; }
-            .sidebar { display: none; }
-            .screenshots-grid { grid-template-columns: 1fr; }
-        }
+        /* ЛОАДЕР */
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #a855f7; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="container">
-            <div class="logo">MOON<span>GAME</span></div>
+<nav class="navbar">
+    <div class="container nav-content">
+        <a class="logo" onclick="showPage('landing')">Content<span>GenAi</span></a>
+        <div class="nav-links">
+            <button onclick="showPage('landing')">Головна</button>
+            <button onclick="showPage('pricing')">Тарифи</button>
+            <button class="btn btn-primary" style="padding: 8px 20px;" onclick="showPage('dashboard')">Кабінет</button>
         </div>
-    </header>
+    </div>
+</nav>
 
-    <div class="main-layout container">
-        <main>
-            <div class="game-header">
-                <h1>MoonRushGame</h1>
-                <p class="dev-name">Разработчик: <span>MoonEngine</span></p>
-                <div class="stats">⭐ 5.0 | RPG Survival | 26 MB</div>
-            </div>
+<div class="container">
+    <div class="ad-slot">📢 ТУТ БУДЕ ВАША РЕКЛАМА (A-ADS / ADSENSE)</div>
 
-            <a href="MoonRush.zip" class="btn-download" download>
-                <div class="dl-text">Скачать последнюю версию</div>
-                <div class="dl-version">v1.0.4 | Windows EXE | 2026</div>
-            </a>
-
-            <section>
-                <h2>Галерея скриншотов</h2>
-                <div class="screenshots-grid">
-                    <img src="img/Screen1.png" alt="Screen 1">
-                    <img src="img/Screen2.png" alt="Screen 2">
-                    <img src="img/Screen3.png" alt="Screen 3">
-                    <img src="img/Screen4.png" alt="Screen 4">
-                </div>
-            </section>
-
-            <section class="comments-section">
-                <h2>Комментарии</h2>
-                <div id="comments-display"></div>
-                <div class="comment-form">
-                    <input type="text" id="user-name" placeholder="Ваше имя">
-                    <textarea id="comment-text" rows="3" placeholder="Ваш отзыв..."></textarea>
-                    <button onclick="addComment()">Отправить</button>
-                </div>
-            </section>
-        </main>
-
-        <aside class="sidebar">
-            <h3>Похожие проекты</h3>
-            <div class="side-card"><div class="side-img">🌑</div><div>Dark Moon<br><small>RPG</small></div></div>
-            <div class="side-card"><div class="side-img">☄️</div><div>Star Hunter<br><small>Action</small></div></div>
-            <div class="side-card"><div class="side-img">🛸</div><div>Void Walker<br><small>Survival</small></div></div>
-        </aside>
+    <div id="landing" class="page active">
+        <section class="hero">
+            <h1>Створюй контент <span class="gradient-text">швидше за всіх</span></h1>
+            <p style="color: #94a3b8; font-size: 1.2rem; margin-bottom: 40px;">ІІ-генератор сценаріїв та ідей для TikTok, Reels та Shorts.</p>
+            <button class="btn btn-primary" onclick="showPage('pricing')">Спробувати безкоштовно</button>
+        </section>
     </div>
 
-    <footer>
-        <p>&copy; 2026 MoonGame Studio. Разработано <strong>MoonEngine</strong>.</p>
-    </footer>
+    <div id="pricing" class="page">
+        <div class="pricing-grid">
+            <div class="card">
+                <h3>Free</h3>
+                <div class="price">0 ₴</div>
+                <ul class="features">
+                    <li>1 ідея на день</li>
+                    <li>Без сценаріїв</li>
+                    <li>Базові хештеги</li>
+                </ul>
+                <button class="btn btn-primary" onclick="setPlan('free')">Обрати</button>
+            </div>
+            <div class="card popular">
+                <div style="background: #a855f7; color: #fff; position: absolute; top: 10px; right: 10px; padding: 2px 10px; border-radius: 10px; font-size: 10px;">TOP</div>
+                <h3>Premium</h3>
+                <div class="price">120 ₴</div>
+                <ul class="features">
+                    <li>Повні сценарії</li>
+                    <li>50 генерацій/день</li>
+                    <li>Топ хештеги</li>
+                </ul>
+                <button class="btn btn-primary" onclick="setPlan('premium')">Купити Premium</button>
+            </div>
+            <div class="card">
+                <h3>Plus</h3>
+                <div class="price">200 ₴</div>
+                <ul class="features">
+                    <li>Безліміт ідей</li>
+                    <li>Скачування в .TXT</li>
+                    <li>Поради для хайпу</li>
+                </ul>
+                <button class="btn btn-primary" onclick="setPlan('plus')">Купити Plus</button>
+            </div>
+        </div>
+    </div>
 
-    <script>
-        // Скрипт комментариев тоже здесь
-        const commentsList = document.getElementById('comments-display');
+    <div id="dashboard" class="page">
+        <div class="dashboard">
+            <h2 id="currentPlanTitle">Тариф: Free</h2>
+            <div class="input-group">
+                <input type="text" id="topicInput" placeholder="Введіть тему (наприклад: лайфхаки для кухні)">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="generate()">Згенерувати</button>
 
-        function loadComments() {
-            const saved = localStorage.getItem('moonGameComments');
-            if (saved) commentsList.innerHTML = saved;
-        }
+            <div id="resultWrapper" style="position: relative; margin-top: 20px;">
+                <div id="resultBox" class="result-box">Результат з'явиться тут...</div>
+                <div id="lockOverlay" class="lock-overlay" style="display: none;">
+                    <button class="btn btn-primary" onclick="showPage('pricing')">Відкрити за 120 ₴</button>
+                </div>
+            </div>
+            
+            <button id="downloadBtn" class="btn" style="background: #30363d; color: #fff; width: 100%; margin-top: 10px; display: none;" onclick="downloadTxt()">📥 Скачати сценарій (.txt)</button>
+        </div>
+    </div>
 
-        function addComment() {
-            const name = document.getElementById('user-name').value;
-            const text = document.getElementById('comment-text').value;
-            if (name && text) {
-                const html = `<div class="comment"><strong>${name}:</strong><p>${text}</p></div>`;
-                commentsList.innerHTML += html;
-                localStorage.setItem('moonGameComments', commentsList.innerHTML);
-                document.getElementById('user-name').value = '';
-                document.getElementById('comment-text').value = '';
+    <div class="ad-slot">📢 ТУТ ТАКОЖ МОЖЕ БУТИ РЕКЛАМА</div>
+</div>
+
+<script>
+    let currentPlan = localStorage.getItem('userPlan') || 'free';
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(id === 'dashboard') updateDashboard();
+    }
+
+    function setPlan(plan) {
+        currentPlan = plan;
+        localStorage.setItem('userPlan', plan);
+        alert("План змінено на " + plan.toUpperCase());
+        showPage('dashboard');
+    }
+
+    function updateDashboard() {
+        document.getElementById('currentPlanTitle').innerText = "Тариф: " + currentPlan.toUpperCase();
+        document.getElementById('downloadBtn').style.display = (currentPlan === 'plus') ? 'block' : 'none';
+    }
+
+    function generate() {
+        const topic = document.getElementById('topicInput').value;
+        const box = document.getElementById('resultBox');
+        const overlay = document.getElementById('lockOverlay');
+        
+        if(!topic) return alert("Введіть тему!");
+
+        box.innerHTML = '<div class="loader"></div> Обробка запиту нейромережею...';
+        overlay.style.display = 'none';
+        box.classList.remove('blur');
+
+        setTimeout(() => {
+            if (currentPlan === 'free') {
+                box.innerText = `💡 ІДЕЯ: Зробіть відео про ${topic}, використовуючи перехід "Jump Cut". \n\n(Це безкоштовна версія. Купіть Premium для повного сценарію)`;
+            } else {
+                let script = `🎬 СЦЕНАРІЙ: ${topic}\n\n[00-05с] Хук: "Ви не повірите, але ${topic} працює саме так!"\n[05-30с] Основна частина: Покажіть 3 кроки реалізації ${topic}.\n[30-45с] Заклик: "Підпишись, якщо було корисно!"\n\n🔥 Хештеги: #рек #${topic.replace(/\s/g, '')} #тренди`;
+                box.innerText = script;
+                
+                // Якщо це не PLUS, можна додати обмеження або просто показати все (як ти захочеш)
             }
-        }
-        window.onload = loadComments;
-    </script>
+        }, 1500);
+    }
+
+    function downloadTxt() {
+        const text = document.getElementById('resultBox').innerText;
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'content-plan.txt';
+        a.click();
+    }
+</script>
+
 </body>
 </html>
+
