@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>ContentGenAi — Твій AI-помічник</title>
     <style>
-        /* ОСНОВНІ СТИЛІ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
@@ -27,7 +26,7 @@
             font-size: 12px;
             margin: 20px 0;
             border-radius: 8px;
-            min-height: 90px;
+            min-height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -51,7 +50,6 @@
         }
         .nav-links button:hover { color: #a855f7; }
 
-        /* ГЕЙТВЕЙ (ЛЕНДИНГ) */
         .page { display: none; animation: fadeIn 0.4s ease-out; }
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -60,12 +58,10 @@
         .hero h1 { font-size: 3.5rem; margin-bottom: 20px; font-weight: 800; }
         .gradient-text { background: linear-gradient(90deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* КНОПКИ */
         .btn { padding: 12px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
         .btn-primary { background: #a855f7; color: #fff; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4); }
         .btn-primary:hover { background: #9333ea; transform: scale(1.05); }
 
-        /* ТАРИФИ */
         .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 40px 0; }
         .card { background: #161b22; padding: 40px; border-radius: 24px; border: 1px solid #30363d; text-align: center; transition: 0.3s; }
         .card:hover { border-color: #a855f7; transform: translateY(-10px); }
@@ -76,7 +72,6 @@
         .features li { margin-bottom: 10px; }
         .features li::before { content: "✓ "; color: #a855f7; }
 
-        /* КАБІНЕТ */
         .dashboard { max-width: 800px; margin: 40px auto; background: #161b22; padding: 30px; border-radius: 20px; }
         .input-group { margin-bottom: 25px; }
         input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #30363d; background: #0b0e14; color: #fff; font-size: 1rem; }
@@ -84,15 +79,6 @@
             background: #0b0e14; padding: 20px; border-radius: 12px; min-height: 150px; border: 1px solid #30363d; 
             white-space: pre-wrap; margin-top: 20px; position: relative;
         }
-        .blur { filter: blur(5px); user-select: none; }
-        .lock-overlay { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); border-radius: 12px;
-        }
-
-        /* ЛОАДЕР */
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #a855f7; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -110,11 +96,17 @@
 
 <div class="container">
 
-    <!-- ===== РЕКЛАМА 1 (після навігації) ===== -->
+    <!-- ========== РЕКЛАМА 1 - після шапки ========== -->
     <div class="ad-slot">
-        <!-- ВСТАВ СЮДИ КОД ВІД A-ADS -->
-        <!-- Приклад: -->
-        <!-- <script src="https://aads.com/твій_код.js" async></script> -->
+        <!-- BEGIN AADS AD UNIT 2437752 -->
+        <div id="frame" style="width: 100%; margin: auto; position: relative; z-index: 99998;">
+            <iframe data-aa='2437752' 
+                    src='//acceptable.a-ads.com/2437752/?size=Adaptive'
+                    style='border:0; padding:0; width:100%; height:auto; overflow:hidden; display: block; margin: auto;'
+                    scrolling="no" 
+                    frameborder="0"></iframe>
+        </div>
+        <!-- END AADS AD UNIT 2437752 -->
     </div>
 
     <div id="landing" class="page active">
@@ -124,15 +116,22 @@
             <button class="btn btn-primary" onclick="showPage('pricing')">Спробувати безкоштовно</button>
         </section>
 
-        <!-- ===== РЕКЛАМА 2 (після hero) ===== -->
+        <!-- ========== РЕКЛАМА 2 - після Hero ========== -->
         <div class="ad-slot">
-            <!-- ВСТАВ СЮДИ ДРУГИЙ КОД ВІД A-ADS -->
+            <!-- BEGIN AADS AD UNIT 2437752 -->
+            <div id="frame" style="width: 100%; margin: auto; position: relative; z-index: 99998;">
+                <iframe data-aa='2437752' 
+                        src='//acceptable.a-ads.com/2437752/?size=Adaptive'
+                        style='border:0; padding:0; width:100%; height:auto; overflow:hidden; display: block; margin: auto;'
+                        scrolling="no" 
+                        frameborder="0"></iframe>
+            </div>
+            <!-- END AADS AD UNIT 2437752 -->
         </div>
     </div>
 
     <div id="pricing" class="page">
         <div class="pricing-grid">
-            <!-- ... твої карти тарифів ... -->
             <div class="card">
                 <h3>Free</h3>
                 <div class="price">0 ₴</div>
@@ -166,9 +165,17 @@
             </div>
         </div>
 
-        <!-- ===== РЕКЛАМА 3 (в тарифах) ===== -->
+        <!-- ========== РЕКЛАМА 3 - в тарифах ========== -->
         <div class="ad-slot">
-            <!-- ВСТАВ СЮДИ ТРЕТІЙ КОД -->
+            <!-- BEGIN AADS AD UNIT 2437752 -->
+            <div id="frame" style="width: 100%; margin: auto; position: relative; z-index: 99998;">
+                <iframe data-aa='2437752' 
+                        src='//acceptable.a-ads.com/2437752/?size=Adaptive'
+                        style='border:0; padding:0; width:100%; height:auto; overflow:hidden; display: block; margin: auto;'
+                        scrolling="no" 
+                        frameborder="0"></iframe>
+            </div>
+            <!-- END AADS AD UNIT 2437752 -->
         </div>
     </div>
 
@@ -189,11 +196,6 @@
             
             <button id="downloadBtn" class="btn" style="background: #30363d; color: #fff; width: 100%; margin-top: 10px; display: none;" onclick="downloadTxt()">📥 Скачати сценарій (.txt)</button>
         </div>
-    </div>
-
-    <!-- ===== РЕКЛАМА 4 (внизу сторінки) ===== -->
-    <div class="ad-slot">
-        <!-- ВСТАВ СЮДИ ЧЕТВЕРТИЙ КОД -->
     </div>
 
 </div>
