@@ -16,42 +16,36 @@
 
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        /* РЕКЛАМНІ БЛОКИ */
+        /* === РЕКЛАМНІ БЛОКИ === */
         .ad-slot {
-            background: #161b22;
-            border: 1px dashed #a855f7;
-            color: #a855f7;
-            text-align: center;
-            padding: 10px;
             margin: 25px 0;
-            border-radius: 12px;
             position: relative;
             min-height: 110px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: #161b22;
+            border-radius: 12px;
+            overflow: hidden;
         }
 
         .ad-slot .close-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.75);
-            color: #fff;
-            width: 28px;
-            height: 28px;
+            top: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.6);
+            color: #ddd;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             z-index: 10;
             transition: 0.2s;
         }
         .ad-slot .close-btn:hover {
             background: #ef4444;
-            transform: scale(1.1);
+            color: white;
         }
 
         /* НАВІГАЦІЯ */
@@ -65,10 +59,16 @@
             z-index: 100;
         }
         .nav-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.5rem; font-weight: 800; cursor: pointer; color: #fff; text-decoration: none; }
+        .logo { font-size: 1.6rem; font-weight: 800; color: #fff; text-decoration: none; }
         .logo span { color: #a855f7; }
+
         .nav-links button {
-            background: none; border: none; color: #cbd5e1; margin-left: 20px; cursor: pointer; font-weight: 500;
+            background: none;
+            border: none;
+            color: #cbd5e1;
+            margin-left: 20px;
+            cursor: pointer;
+            font-weight: 500;
         }
         .nav-links button:hover { color: #a855f7; }
 
@@ -76,30 +76,77 @@
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .hero { text-align: center; padding: 80px 0; }
-        .hero h1 { font-size: 3.5rem; margin-bottom: 20px; font-weight: 800; }
+        .hero { text-align: center; padding: 90px 0 60px; }
+        .hero h1 { font-size: 3.4rem; margin-bottom: 20px; font-weight: 800; }
         .gradient-text { background: linear-gradient(90deg, #a855f7, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        
-        .btn { padding: 12px 30px; border-radius: 50px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; }
-        .btn-primary { background: #a855f7; color: #fff; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4); }
-        .btn-primary:hover { background: #9333ea; transform: scale(1.05); }
 
-        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 40px 0; }
-        .card { background: #161b22; padding: 40px; border-radius: 24px; border: 1px solid #30363d; text-align: center; transition: 0.3s; }
-        .card:hover { border-color: #a855f7; transform: translateY(-10px); }
-        .card.popular { border: 2px solid #a855f7; position: relative; }
-        .card h3 { font-size: 1.8rem; margin-bottom: 10px; }
-        .price { font-size: 2.5rem; font-weight: 800; color: #a855f7; margin-bottom: 20px; }
-        .features { list-style: none; margin-bottom: 30px; color: #94a3b8; text-align: left; }
-        .features li { margin-bottom: 10px; }
-        .features li::before { content: "✓ "; color: #a855f7; }
+        .btn { 
+            padding: 13px 32px; 
+            border-radius: 50px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            border: none; 
+            transition: 0.3s; 
+        }
+        .btn-primary { 
+            background: #a855f7; 
+            color: #fff; 
+        }
+        .btn-primary:hover { 
+            background: #9333ea; 
+            transform: scale(1.05); 
+        }
 
-        .dashboard { max-width: 800px; margin: 40px auto; background: #161b22; padding: 30px; border-radius: 20px; }
-        .input-group { margin-bottom: 25px; }
-        input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #30363d; background: #0b0e14; color: #fff; font-size: 1rem; }
+        /* ТАРИФИ */
+        .pricing-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
+            padding: 40px 0; 
+        }
+        .card { 
+            background: #161b22; 
+            padding: 40px 25px; 
+            border-radius: 24px; 
+            border: 1px solid #30363d; 
+            text-align: center; 
+            transition: 0.3s; 
+        }
+        .card:hover { border-color: #a855f7; transform: translateY(-8px); }
+        .card.popular { 
+            border: 2px solid #a855f7; 
+            position: relative; 
+        }
+        .card.popular::before {
+            content: "TOP";
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #a855f7;
+            color: white;
+            font-size: 12px;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+        .price { font-size: 2.6rem; font-weight: 800; color: #a855f7; margin: 15px 0; }
+
+        /* КАБІНЕТ */
+        .dashboard { 
+            max-width: 800px; 
+            margin: 40px auto; 
+            background: #161b22; 
+            padding: 35px; 
+            border-radius: 20px; 
+        }
         .result-box { 
-            background: #0b0e14; padding: 20px; border-radius: 12px; min-height: 180px; border: 1px solid #30363d; 
-            white-space: pre-wrap; margin-top: 20px; position: relative;
+            background: #0b0e14; 
+            padding: 20px; 
+            border-radius: 12px; 
+            min-height: 180px; 
+            border: 1px solid #30363d; 
+            white-space: pre-wrap; 
+            margin-top: 20px; 
+            position: relative;
         }
     </style>
 </head>
@@ -111,18 +158,18 @@
         <div class="nav-links">
             <button onclick="showPage('landing')">Головна</button>
             <button onclick="showPage('pricing')">Тарифи</button>
-            <button class="btn btn-primary" style="padding: 8px 20px;" onclick="showPage('dashboard')">Кабінет</button>
+            <button class="btn btn-primary" onclick="showPage('dashboard')">Кабінет</button>
         </div>
     </div>
 </nav>
 
 <div class="container">
 
-    <!-- ========== РЕКЛАМА 1 ========== -->
+    <!-- РЕКЛАМА 1 -->
     <div class="ad-slot" id="ad1">
         <span class="close-btn" onclick="closeAd('ad1')">×</span>
         <!-- BEGIN AADS AD UNIT 2437752 -->
-        <div style="width: 100%; max-width: 728px; margin: 0 auto; position: relative;">
+        <div style="width: 100%; max-width: 728px; margin: 0 auto;">
             <iframe data-aa='2437752' 
                     src='//acceptable.a-ads.com/2437752/?size=Adaptive'
                     style='border:0; padding:0; width:100%; height:auto; overflow:hidden; display: block; margin: auto;'
@@ -135,7 +182,7 @@
     <div id="landing" class="page active">
         <section class="hero">
             <h1>Створюй контент <span class="gradient-text">швидше за всіх</span></h1>
-            <p style="color: #94a3b8; font-size: 1.2rem; margin-bottom: 40px;">ІІ-генератор сценаріїв та ідей для TikTok, Reels та Shorts.</p>
+            <p style="color: #94a3b8; font-size: 1.25rem; margin-bottom: 40px;">ІІ-генератор сценаріїв та ідей для TikTok, Reels та Shorts.</p>
             <button class="btn btn-primary" onclick="showPage('pricing')">Спробувати безкоштовно</button>
         </section>
     </div>
@@ -145,48 +192,33 @@
             <div class="card">
                 <h3>Free</h3>
                 <div class="price">0 ₴</div>
-                <ul class="features">
-                    <li>1 ідея на день</li>
-                    <li>Без сценаріїв</li>
-                    <li>Базові хештеги</li>
+                <ul class="features" style="list-style:none; text-align:left; margin:20px 0;">
+                    <li>✓ 1 ідея на день</li>
+                    <li>✓ Без сценаріїв</li>
+                    <li>✓ Базові хештеги</li>
                 </ul>
                 <button class="btn btn-primary" onclick="setPlan('free')">Обрати</button>
             </div>
             <div class="card popular">
-                <div style="background: #a855f7; color: #fff; position: absolute; top: 10px; right: 10px; padding: 2px 10px; border-radius: 10px; font-size: 10px;">TOP</div>
                 <h3>Premium</h3>
                 <div class="price">120 ₴</div>
-                <ul class="features">
-                    <li>Повні сценарії</li>
-                    <li>50 генерацій/день</li>
-                    <li>Топ хештеги</li>
+                <ul class="features" style="list-style:none; text-align:left; margin:20px 0;">
+                    <li>✓ Повні сценарії</li>
+                    <li>✓ 50 генерацій/день</li>
+                    <li>✓ Топ хештеги</li>
                 </ul>
                 <button class="btn btn-primary" onclick="setPlan('premium')">Купити Premium</button>
             </div>
             <div class="card">
                 <h3>Plus</h3>
                 <div class="price">200 ₴</div>
-                <ul class="features">
-                    <li>Безліміт ідей</li>
-                    <li>Скачування в .TXT</li>
-                    <li>Поради для хайпу</li>
+                <ul class="features" style="list-style:none; text-align:left; margin:20px 0;">
+                    <li>✓ Безліміт ідей</li>
+                    <li>✓ Скачування в .TXT</li>
+                    <li>✓ Поради для хайпу</li>
                 </ul>
                 <button class="btn btn-primary" onclick="setPlan('plus')">Купити Plus</button>
             </div>
-        </div>
-
-        <!-- ========== РЕКЛАМА 2 ========== -->
-        <div class="ad-slot" id="ad2">
-            <span class="close-btn" onclick="closeAd('ad2')">×</span>
-            <!-- BEGIN AADS AD UNIT 2437752 -->
-            <div style="width: 100%; max-width: 728px; margin: 0 auto; position: relative;">
-                <iframe data-aa='2437752' 
-                        src='//acceptable.a-ads.com/2437752/?size=Adaptive'
-                        style='border:0; padding:0; width:100%; height:auto; overflow:hidden; display: block; margin: auto;'
-                        scrolling="no" 
-                        frameborder="0"></iframe>
-            </div>
-            <!-- END AADS AD UNIT 2437752 -->
         </div>
     </div>
 
@@ -196,16 +228,16 @@
             <div class="input-group">
                 <input type="text" id="topicInput" placeholder="Введіть тему (наприклад: лайфхаки для кухні)">
             </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="generate()">Згенерувати</button>
+            <button class="btn btn-primary" style="width: 100%; padding: 15px;" onclick="generate()">Згенерувати</button>
 
-            <div id="resultWrapper" style="position: relative; margin-top: 20px;">
+            <div id="resultWrapper" style="position: relative; margin-top: 25px;">
                 <div id="resultBox" class="result-box">Результат з'явиться тут...</div>
                 <div id="lockOverlay" class="lock-overlay" style="display: none;">
                     <button class="btn btn-primary" onclick="showPage('pricing')">Відкрити за 120 ₴</button>
                 </div>
             </div>
             
-            <button id="downloadBtn" class="btn" style="background: #30363d; color: #fff; width: 100%; margin-top: 10px; display: none;" onclick="downloadTxt()">📥 Скачати сценарій (.txt)</button>
+            <button id="downloadBtn" class="btn" style="background: #30363d; color: #fff; width: 100%; margin-top: 15px; display: none;" onclick="downloadTxt()">📥 Скачати сценарій (.txt)</button>
         </div>
     </div>
 
@@ -233,37 +265,30 @@
     }
 
     function closeAd(adId) {
-        const ad = document.getElementById(adId);
-        if (ad) ad.style.display = 'none';
+        document.getElementById(adId).style.display = 'none';
     }
 
     function generate() {
         const topic = document.getElementById('topicInput').value;
         const box = document.getElementById('resultBox');
-        const overlay = document.getElementById('lockOverlay');
-        
         if(!topic) return alert("Введіть тему!");
 
-        box.innerHTML = '<div class="loader"></div> Обробка запиту нейромережею...';
-        overlay.style.display = 'none';
-        box.classList.remove('blur');
+        box.innerHTML = '<div style="text-align:center;padding:30px;">Обробка...</div>';
 
         setTimeout(() => {
             if (currentPlan === 'free') {
-                box.innerText = `💡 ІДЕЯ: Зробіть відео про ${topic}, використовуючи перехід "Jump Cut". \n\n(Це безкоштовна версія. Купіть Premium для повного сценарію)`;
+                box.innerText = `💡 ІДЕЯ: Зробіть відео про ${topic} з переходом "Jump Cut".\n\n(Купіть Premium для повного сценарію)`;
             } else {
-                let script = `🎬 СЦЕНАРІЙ: ${topic}\n\n[00-05с] Хук: "Ви не повірите, але ${topic} працює саме так!"\n[05-30с] Основна частина: Покажіть 3 кроки реалізації \( {topic}.\n[30-45с] Заклик: "Підпишись, якщо було корисно!"\n\n🔥 Хештеги: #рек # \){topic.replace(/\s/g, '')} #тренди`;
-                box.innerText = script;
+                box.innerText = `🎬 СЦЕНАРІЙ: ${topic}\n\n[00-05с] Хук: "Ви не повірите, але \( {topic} працює саме так!"\n[05-30с] Покажіть 3 кроки...\n[30-45с] Підпишись!\n\n# \){topic.replace(/\s/g,'')} #рек #тренди`;
             }
-        }, 1500);
+        }, 1200);
     }
 
     function downloadTxt() {
         const text = document.getElementById('resultBox').innerText;
         const blob = new Blob([text], { type: 'text/plain' });
-        const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
+        a.href = URL.createObjectURL(blob);
         a.download = 'content-plan.txt';
         a.click();
     }
